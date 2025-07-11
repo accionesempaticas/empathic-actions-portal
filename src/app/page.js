@@ -1,18 +1,28 @@
 'use client';
 
-import { useData } from '../contexts/DataContext';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function HomePage() {
-  const { users } = useData();
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
-  return (
-    <main>
-      <h1>Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ul>
-    </main>
-  );
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (user.role === 'admin') {
+        router.push('/admin');
+      } else if (user.role === 'user') {
+        router.push('/commitment-letters');
+      }
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  return null; // Or a loading spinner, or a message
 }

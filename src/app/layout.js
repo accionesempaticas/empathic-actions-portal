@@ -1,5 +1,8 @@
 import { DataProvider } from '../contexts/DataContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import './globals.css';
+import DashboardNav from "@/components/layout/DashboardNav";
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: 'Create Next App',
@@ -10,7 +13,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <DataProvider>{children}</DataProvider>
+        <AuthProvider>
+          <DashboardNav />
+          <DataProvider>{children}</DataProvider>
+        </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
