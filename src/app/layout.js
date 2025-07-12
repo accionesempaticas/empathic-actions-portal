@@ -1,8 +1,8 @@
 import { DataProvider } from '../contexts/DataContext';
 import { AuthProvider } from '../contexts/AuthContext';
-import './globals.css';
 import DashboardNav from "@/components/layout/DashboardNav";
 import { Toaster } from 'react-hot-toast';
+import './globals.css';
 
 export const metadata = {
   title: 'Create Next App',

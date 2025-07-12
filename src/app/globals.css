@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 @theme {
   --color-primary-50: #E0F5F5;
   --color-primary-100: #B3E0E0;
@@ -22,4 +26,15 @@
   --color-secondary-700: #CCAA3C;
   --color-secondary-800: #B39634;
   --color-secondary-900: #99822C;
+}
+
+body {
+  background-color: #000;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Aplica solo al iconito del date picker(icono del calendario)*/
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(52%) sepia(40%) saturate(434%) hue-rotate(138deg) brightness(97%) contrast(89%);
 }
