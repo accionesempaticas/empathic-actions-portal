@@ -1,9 +1,28 @@
-import RegistroForm from '@/components/RegistroForm';
+'use client';
 
-export default function Home() {
-  return (
-    <main className="p-6">
-      <RegistroForm />
-    </main>
-  );
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
+
+export default function HomePage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (user.role === 'admin') {
+        router.push('/admin');
+      } else if (user.role === 'user') {
+        router.push('/commitment-letters');
+      }
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  return null; // Or a loading spinner, or a message
 }
