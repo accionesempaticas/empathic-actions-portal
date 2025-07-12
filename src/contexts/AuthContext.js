@@ -10,32 +10,39 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-
     useEffect(() => {
         const loadUserFromLocalStorage = async () => {
             const token = localStorage.getItem('access_token');
             const storedUser = localStorage.getItem('user');
+
             if (token && storedUser) {
                 api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 setUser(JSON.parse(storedUser));
-            } else if (token) {
-                // If only token exists, try to fetch user data
+                setLoading(false);
+                return;
+            }
+
+            if (token && !storedUser) {
                 try {
                     const { data } = await api.get('/user');
                     setUser(data.user);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    setLoading(false);
+                    return;
                 } catch (error) {
-                    console.error("Failed to fetch user data", error);
+                    console.error('Failed to fetch user data', error);
                     localStorage.removeItem('access_token');
                     localStorage.removeItem('user');
                     delete api.defaults.headers.common['Authorization'];
                 }
             }
+
             setLoading(false);
+            router.push('/login');
         };
 
         loadUserFromLocalStorage();
-    }, []);
+    }, [router]);
 
     const login = async (email, password) => {
         try {
@@ -45,9 +52,9 @@ export function AuthProvider({ children }) {
             api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
             setUser(data.user);
             if (data.user.role === 'admin') {
-                router.push('/admin');
+                router.push('/admin/users');
             } else {
-                router.push('/commitment-letters');
+                router.push('/applicants/complete-profile');
             }
         } catch (error) {
             console.error("Login failed", error);

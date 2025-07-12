@@ -1,25 +1,14 @@
 const routes = [
     {
-        path: '/commitment-letters',
-        name: 'Cartas Compromiso',
-        roles: ['user', 'admin'],
+        path: '/applicants/complete-profile',
+        name: 'Datos Personales',
+        roles: ['user'],
     },
     {
-        path: '/sign-document',
-        name: 'Firmar Documento',
-        roles: ['user', 'admin'],
-    },
-    {
-        path: '/admin',
-        name: 'Administración',
+        path: '/admin/users',
+        name: 'Gestión de usuarios',
         roles: ['admin'],
-    },
-    {
-        path: '/documents',
-        name: 'Documentos',
-        roles: ['admin'],
-    },
-    // Add more routes as needed
+    }
 ];
 
 export default routes;

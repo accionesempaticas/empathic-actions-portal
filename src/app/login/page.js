@@ -1,29 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import {useState} from 'react';
+import {useAuth} from '@/contexts/AuthContext';
+import {useRouter} from 'next/navigation';
 
 export default function LoginPage() {
+    const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const { login, user, loading } = useAuth();
+    const {login, user, loading} = useAuth();
 
-    // If authentication is still loading, show a loading state
-    if (loading) {
-        return null; // Or a loading spinner
-    }
+    if (loading) return null;
 
-    // If user is already logged in, redirect them
     if (user) {
-        if (user.role === 'admin') {
-            router.push('/admin/documents');
-        } else {
-            router.push('/commitment-letters');
-        }
+        router.push(user.role === 'admin' ? '/admin/users' : '/applicants/complete-profile');
         return null;
     }
 
@@ -32,48 +25,85 @@ export default function LoginPage() {
         setError('');
         try {
             await login(email, password);
-            // Redirection handled by AuthContext
         } catch (err) {
-            setError(err.response?.data?.message || 'Error de inicio de sesión. Por favor, verifica tus credenciales.');
+            setError(err.response?.data?.message || 'Error de inicio de sesión. Verifica tus credenciales.');
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-primary-50">
-            <div className="bg-white p-10 rounded-xl shadow-lg w-full max-w-md">
-                <h1 className="text-3xl font-extrabold mb-8 text-center text-primary-700">Iniciar Sesión</h1>
-                <form onSubmit={handleSubmit}>
-                    {error && <p className="text-red-600 text-center mb-4 font-medium">{error}</p>}
-                    <div className="mb-5">
-                        <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email:</label>
+        <div
+            className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-100 px-4">
+            <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-md p-10 space-y-6">
+                {/* Logo con texto */}
+                <div className="flex items-center justify-center space-x-4 mb-2">
+                    {/* Isotipo */}
+                    <img
+                        src="/logo.png"
+                        alt="Isotipo"
+                        className="h-12 w-12 object-contain"
+                    />
+
+                    {/* Texto en dos líneas */}
+                    <div className="text-left leading-none">
+                        <h2 className="text-lg font-bold text-primary-700">ACCIONES</h2>
+                        <h2 className="text-lg font-bold text-primary-700">EMPÁTICAS</h2>
+                    </div>
+                </div>
+
+
+                {/* Título y mensaje */}
+                <h1 className="text-3xl font-extrabold text-center text-primary-700">Bienvenid@ 🩵💛</h1>
+                <p className="text-center text-gray-600 text-sm">
+                    Accede a la plataforma de <strong>voluntariado 2025-II</strong> y acompáñanos en esta gran
+                    experiencia.
+                </p>
+
+                {/* Formulario */}
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    {error && (
+                        <p className="text-red-600 text-center font-medium">{error}</p>
+                    )}
+
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">Correo
+                            electrónico</label>
                         <input
-                            type="email"
                             id="email"
-                            className="shadow-sm border border-primary-200 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200 ease-in-out"
+                            type="email"
+                            required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
+                            className="w-full px-4 py-3 rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-gray-800 shadow-sm"
                         />
                     </div>
-                    <div className="mb-6">
-                        <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">Contraseña:</label>
+
+                    <div className="relative">
                         <input
-                            type="password"
                             id="password"
-                            className="shadow-sm border border-primary-200 rounded-lg w-full py-3 px-4 text-gray-800 mb-4 leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200 ease-in-out"
+                            type={showPassword ? 'text' : 'password'}
+                            required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
+                            className="w-full px-4 py-3 pr-12 rounded-lg border border-primary-200 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-gray-800 shadow-sm"
+                            placeholder="••••••••"
                         />
-                    </div>
-                    <div className="flex items-center justify-center">
                         <button
-                            type="submit"
-                            className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition duration-200 ease-in-out w-full"
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 focus:outline-none"
+                            tabIndex={-1}
                         >
-                            Entrar
+                            {showPassword ? '🙈' : '🐵️'}
                         </button>
                     </div>
+
+
+                    <button
+                        type="submit"
+                        className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-xl shadow-md transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                        Entrar
+                    </button>
                 </form>
             </div>
         </div>

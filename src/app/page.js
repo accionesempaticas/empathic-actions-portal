@@ -13,9 +13,9 @@ export default function HomePage() {
       if (!user) {
         router.push('/login');
       } else if (user.role === 'admin') {
-        router.push('/admin');
+        router.push('/admin/users');
       } else if (user.role === 'user') {
-        router.push('/commitment-letters');
+        router.push('/applicants/complete-profile');
       }
     }
   }, [user, loading, router]);
