@@ -1,18 +1,9 @@
-'use client';
+import RegistroForm from '@/components/RegistroForm';
 
-import { useData } from '../contexts/DataContext';
-
-export default function HomePage() {
-  const { users } = useData();
-
+export default function Home() {
   return (
-    <main>
-      <h1>Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ul>
+    <main className="p-6">
+      <RegistroForm />
     </main>
   );
 }
