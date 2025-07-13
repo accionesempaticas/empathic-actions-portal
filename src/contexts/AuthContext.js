@@ -2,14 +2,14 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import api from '@/api/api';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation'
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const pathname = usePathname()
     useEffect(() => {
         const loadUserFromLocalStorage = async () => {
             const token = localStorage.getItem('access_token');
@@ -38,11 +38,16 @@ export function AuthProvider({ children }) {
             }
 
             setLoading(false);
-            router.push('/login');
+            const publicRoutes = ['/login', '/applicants/register'];
+            console.log('Current pathname:', pathname);
+            console.log('Is public route:', publicRoutes.includes(pathname));
+            if (!publicRoutes.includes(pathname)) {
+                router.push('/login');
+            }
         };
 
         loadUserFromLocalStorage();
-    }, [router]);
+    }, []);
 
     const login = async (email, password) => {
         try {
