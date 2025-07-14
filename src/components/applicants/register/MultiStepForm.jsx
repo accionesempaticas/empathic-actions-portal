@@ -78,7 +78,7 @@ const MultiStepForm = () => {
                 className="min-h-screen flex flex-col items-center justify-center gap-8 bg-gradient-to-br from-primary-50 to-secondary-50 px-4 py-10">
                 <div className="max-w-5xl w-full bg-white/80 backdrop-blur-md p-10 rounded-3xl shadow-xl">
                     <StepIndicator
-                        currentStep={1}
+                        currentStep={currentStep} //✅ usa el estado dinámico del form activo
                         steps={[
                             {label: 'Bienvenida e introducción', icon: <FaHandshake/>},
                             {label: 'Datos personales', icon: <FaUser/>},
