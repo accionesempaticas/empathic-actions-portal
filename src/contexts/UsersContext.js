@@ -92,6 +92,26 @@ export function UsersProvider({ children }) {
         }
     };
 
+
+    const registerPostulant = async (formData) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await api.post('/postulant', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data;
+        } catch (err) {
+            setError(err);
+            console.error("Failed to register postulant:", err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <UsersContext.Provider value={{
             users,
@@ -101,7 +121,8 @@ export function UsersProvider({ children }) {
             getUser,
             createUser,
             updateUser,
-            deleteUser
+            deleteUser,
+            registerPostulant
         }}>
             {children}
         </UsersContext.Provider>

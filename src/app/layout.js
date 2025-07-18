@@ -1,5 +1,6 @@
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { UsersProvider } from '@/contexts/UsersContext';
 import RootWrapper from "@/components/layout/RootWrapper";
 import './globals.css';
 
@@ -13,8 +14,10 @@ export default function RootLayout({ children }) {
       <html lang="en">
       <body>
       <AuthProvider>
-        <RootWrapper>{children}</RootWrapper>
-        <Toaster />
+        <UsersProvider>
+          <RootWrapper>{children}</RootWrapper>
+          <Toaster />
+        </UsersProvider>
       </AuthProvider>
       </body>
       </html>

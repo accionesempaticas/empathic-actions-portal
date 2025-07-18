@@ -3,7 +3,15 @@
 import React from 'react';
 
 const Step5MotivationAndContribution = ({ nextStep, prevStep, handleChange, formData }) => {
-    // You would typically fetch roles from an API or define them here
+    const isStepComplete = () => {
+        const requiredFields = ['contribution_motivation', 'preferred_roles', 'available_hours_per_week'];
+        return (
+            formData.contribution_motivation?.trim().length > 0 &&
+            Array.isArray(formData.preferred_roles) && formData.preferred_roles.length > 0 &&
+            formData.available_hours_per_week?.toString().trim().length > 0
+        );
+    };
+
     const roles = [
         'Gestión de Proyectos',
         'Marketing y Comunicación',
@@ -22,36 +30,41 @@ const Step5MotivationAndContribution = ({ nextStep, prevStep, handleChange, form
             <h2 className="text-xl font-semibold mb-4">Motivación y aporte</h2>
             <div className="grid grid-cols-1 gap-4 mb-6">
                 <div>
-                    <label htmlFor="howToContribute" className="block text-sm font-medium text-gray-700">¿Cómo consideras que podrías aportar a ACCIONES EMPÁTICAS? *</label>
+                    <label htmlFor="contribution_motivation" className="block text-sm font-medium text-gray-700">
+                        ¿Cómo consideras que podrías aportar a ACCIONES EMPÁTICAS? *
+                    </label>
                     <textarea
-                        name="howToContribute"
-                        id="howToContribute"
+                        name="contribution_motivation"
+                        id="contribution_motivation"
                         rows="4"
                         onChange={handleChange}
-                        value={formData.howToContribute || ''}
+                        value={formData.contribution_motivation || ''}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         required
                     ></textarea>
                 </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Marca el rol que te gustaría desempeñar en la organización *</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                        Marca el rol que te gustaría desempeñar en la organización *
+                    </label>
                     <div className="mt-1 grid grid-cols-1 md:grid-cols-2 gap-2">
                         {roles.map((role) => (
                             <label key={role} className="inline-flex items-center">
                                 <input
                                     type="checkbox"
-                                    name="desiredRoles"
+                                    name="preferred_roles"
                                     value={role}
-                                    checked={formData.desiredRoles?.includes(role) || false}
+                                    checked={formData.preferred_roles?.includes(role) || false}
                                     onChange={(e) => {
                                         const { value, checked } = e.target;
-                                        let updatedRoles = formData.desiredRoles ? [...formData.desiredRoles] : [];
+                                        let updatedRoles = formData.preferred_roles ? [...formData.preferred_roles] : [];
                                         if (checked) {
                                             updatedRoles.push(value);
                                         } else {
                                             updatedRoles = updatedRoles.filter((r) => r !== value);
                                         }
-                                        handleChange({ target: { name: 'desiredRoles', value: updatedRoles } });
+                                        handleChange({ target: { name: 'preferred_roles', value: updatedRoles } });
                                     }}
                                     className="form-checkbox"
                                 />
@@ -60,19 +73,23 @@ const Step5MotivationAndContribution = ({ nextStep, prevStep, handleChange, form
                         ))}
                     </div>
                 </div>
+
                 <div>
-                    <label htmlFor="weeklyHours" className="block text-sm font-medium text-gray-700">¿Cuántas horas a la semana podrías brindar como voluntario? *</label>
+                    <label htmlFor="available_hours_per_week" className="block text-sm font-medium text-gray-700">
+                        ¿Cuántas horas a la semana podrías brindar como voluntario? *
+                    </label>
                     <input
                         type="number"
-                        name="weeklyHours"
-                        id="weeklyHours"
+                        name="available_hours_per_week"
+                        id="available_hours_per_week"
                         onChange={handleChange}
-                        value={formData.weeklyHours || ''}
+                        value={formData.available_hours_per_week || ''}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         required
                     />
                 </div>
             </div>
+
             <div className="flex justify-between">
                 <button
                     type="button"
@@ -84,7 +101,12 @@ const Step5MotivationAndContribution = ({ nextStep, prevStep, handleChange, form
                 <button
                     type="button"
                     onClick={nextStep}
-                    className="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={!isStepComplete()}
+                    className={`font-bold py-2 px-4 rounded ${
+                        isStepComplete()
+                            ? 'bg-primary-500 hover:bg-primary-700 text-white'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                 >
                     Siguiente
                 </button>
