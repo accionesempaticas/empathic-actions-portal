@@ -17,7 +17,7 @@ const Step4ExperienceAndVolunteering = ({ nextStep, prevStep, handleChange, form
     const handleFileChange = (e) => {
         handleChange({ 
             target: { 
-                name: 'cv_file', 
+                name: e.target.name, // ← usa el name real del input (cv_file, pi_file o pf_file)
                 value: e.target.files[0] 
             } 
         });
@@ -52,11 +52,10 @@ const Step4ExperienceAndVolunteering = ({ nextStep, prevStep, handleChange, form
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                             required
                         >
-                            <option value="">Seleccione una opción</option>
-                            <option value="0">Sin experiencia</option>
-                            <option value="1">Menos de 1 año</option>
-                            <option value="2">Entre 1 y 2 años</option>
-                            <option value="3">Más de 2 años</option>
+                            <option value="">Seleccione un programa</option>
+                            <option value="0">SkillUp 360</option>
+                            <option value="1">Mentores Empáticos</option>
+                            <option value="2">Líderes Que Impactan</option>
                         </select>
                     </div>
                     <div>
@@ -93,6 +92,40 @@ const Step4ExperienceAndVolunteering = ({ nextStep, prevStep, handleChange, form
                     />
                     <p className="mt-1 text-sm text-gray-500">Solo archivos PDF (máx. 5MB)</p>
                     {formData.cv_file && <p className="mt-2 text-sm text-green-600">Archivo seleccionado: {formData.cv_file.name}</p>}
+                </div>
+            </div>
+
+            {/* pi y pf Upload */}
+            <div>
+                <h3 class="text-lg font-medium text-gray-800 mb-2">Fotos</h3>
+                <div>
+                    <label htmlFor="pi_file" className="block text-sm font-medium text-gray-700">Adjunta una foto informal *</label>
+                    <input
+                        type="file"
+                        name="pi_file"
+                        id="pi_file"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={handleFileChange}
+                        className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        required
+                    />
+                    <p className="mt-1 text-sm text-gray-500">Solo archivos JPG O PNG (máx. 5MB)</p>
+                    {formData.pi_file && <p className="mt-2 text-sm text-green-600">Imagen seleccionada: {formData.pi_file.name}</p>}
+                </div>
+
+                <div>
+                    <label htmlFor="pf_file" className="block text-sm font-medium text-gray-700">Adjunta una foto formal *</label>
+                    <input
+                        type="file"
+                        name="pf_file"
+                        id="pf_file"
+                        accept=".jpg, .jpeg, .png"
+                        onChange={handleFileChange}
+                        className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        required
+                    />
+                    <p className="mt-1 text-sm text-gray-500">Solo archivos JPG O PNG (máx. 5MB)</p>
+                    {formData.pf_file && <p className="mt-2 text-sm text-green-600">Imagen seleccionada: {formData.pf_file.name}</p>}
                 </div>
             </div>
 
