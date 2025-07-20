@@ -1,4 +1,4 @@
-import api from './config';
+import api from "@/api/api";
 
 const personasService = {
   // Obtener todas las personas o filtrar

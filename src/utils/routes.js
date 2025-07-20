@@ -1,13 +1,23 @@
+import {MdDashboard, MdPeople} from "react-icons/md";
+
 const routes = [
     {
         path: '/applicants/complete-profile',
-        name: 'Datos Personales',
+        title: 'Datos Personales',
         roles: ['user'],
+        icon: <MdDashboard size={22}/>
+    },
+    {
+        path: '/admin/dashboard',
+        title: 'Dashboard',
+        roles: ['admin'],
+        icon: <MdDashboard size={22}/>
     },
     {
         path: '/admin/users',
-        name: 'Gestión de usuarios',
+        title: 'Gestión de usuarios',
         roles: ['admin'],
+        icon: <MdPeople size={22}/>
     }
 ];
 
