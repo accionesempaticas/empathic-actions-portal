@@ -1,5 +1,18 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Magnolia+Script&family=Poppins:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.font-magnolia {
+  font-family: 'Magnolia Script', cursive;
+}
 @theme {
   --color-primary-50: #E0F5F5;
   --color-primary-100: #B3E0E0;
@@ -23,3 +36,4 @@
   --color-secondary-800: #B39634;
   --color-secondary-900: #99822C;
 }
+
