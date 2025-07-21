@@ -1,26 +1,35 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@tailwind utilities;
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
+
+.font-magnolia {
+  font-family: 'Magnolia Script', cursive;
+}
+@theme {
+  --color-primary-50: #E0F5F5;
+  --color-primary-100: #B3E0E0;
+  --color-primary-200: #80CCCC;
+  --color-primary-300: #4DADA8;
+  --color-primary-400: #209999;
+  --color-primary-500: #00A8A8;
+  --color-primary-600: #009999;
+  --color-primary-700: #008080;
+  --color-primary-800: #006666;
+  --color-primary-900: #004D4D;
+
+  --color-secondary-50: #FFFBEB;
+  --color-secondary-100: #FFF3C4;
+  --color-secondary-200: #FFE99C;
+  --color-secondary-300: #FFDF74;
+  --color-secondary-400: #FFD54C;
+  --color-secondary-500: #F2C94C;
+  --color-secondary-600: #E0B844;
+  --color-secondary-700: #CCAA3C;
+  --color-secondary-800: #B39634;
+  --color-secondary-900: #99822C;
+}
+
