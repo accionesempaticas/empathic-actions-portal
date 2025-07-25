@@ -81,45 +81,45 @@ const PersonasList = ({ onEdit, onDelete, refresh }) => {
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left rounded-xl overflow-hidden">
-            <thead>
-              <tr className="bg-gradient-to-r from-[#02A9A9] to-[#009e9e] text-white">
+        <table className="w-full text-left rounded-xl overflow-hidden">
+          <thead>
+            <tr className="bg-gradient-to-r from-[#02A9A9] to-[#009e9e] text-white">
                 <th className="px-4 py-3 font-bold text-center">DNI</th>
                 <th className="px-4 py-3 font-bold text-center">Nombre Completo</th>
                 <th className="px-4 py-3 font-bold text-center">Email</th>
                 <th className="px-4 py-3 font-bold text-center">Teléfono</th>
                 <th className="px-4 py-3 font-bold text-center">Edad</th>
                 <th className="px-4 py-3 font-bold text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
+            </tr>
+          </thead>
+          <tbody>
               {paginatedData.map((persona, idx) => (
-                <tr key={persona.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#F8F9FB]'}>
+              <tr key={persona.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#F8F9FB]'}>
                   <td className="px-4 py-3 text-[#02A9A9] font-medium text-center">{persona.dni}</td>
-                  <td className="px-4 py-3 text-[#02A9A9] font-medium">{persona.full_name}</td>
-                  <td className="px-4 py-3 text-[#02A9A9] font-medium">{persona.email}</td>
+                <td className="px-4 py-3 text-[#02A9A9] font-medium">{persona.full_name}</td>
+                <td className="px-4 py-3 text-[#02A9A9] font-medium">{persona.email}</td>
                   <td className="px-4 py-3 text-[#02A9A9] font-medium text-center">{persona.phone_number}</td>
                   <td className="px-4 py-3 text-[#02A9A9] font-medium text-center">{persona.age}</td>
-                  <td className="px-4 py-3 text-right flex gap-2 justify-end">
-                    <button
+                <td className="px-4 py-3 text-right flex gap-2 justify-end">
+                  <button
                       onClick={() => onEdit ? onEdit(persona) : null}
-                      className="bg-[#02A9A9] text-white hover:bg-[#FFC401] hover:text-[#02A9A9] p-2 rounded-full shadow transition-colors flex items-center justify-center"
-                      title="Editar"
-                    >
-                      <FaEdit size={16} />
-                    </button>
-                    <button
+                    className="bg-[#02A9A9] text-white hover:bg-[#FFC401] hover:text-[#02A9A9] p-2 rounded-full shadow transition-colors flex items-center justify-center"
+                    title="Editar"
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                  <button
                       onClick={() => onDelete ? onDelete(persona, deletePersona) : deletePersona(persona.id)}
-                      className="bg-[#02A9A9] text-white hover:bg-[#FFC401] hover:text-[#02A9A9] p-2 rounded-full shadow transition-colors flex items-center justify-center"
-                      title="Eliminar"
-                    >
-                      <FaTrash size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    className="bg-[#02A9A9] text-white hover:bg-[#FFC401] hover:text-[#02A9A9] p-2 rounded-full shadow transition-colors flex items-center justify-center"
+                    title="Eliminar"
+                  >
+                    <FaTrash size={16} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         </div>
         
         {/*/!* Información de depuración *!/*/}

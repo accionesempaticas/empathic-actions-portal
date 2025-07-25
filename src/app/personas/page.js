@@ -34,28 +34,28 @@ export default function PersonasPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold font-magnolia" style={{ color: '#02A9A9' }}>Gestión de Personas</h1>
-          <button
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold font-magnolia" style={{ color: '#02A9A9' }}>Gestión de Personas</h1>
+        <button
             onClick={handleNuevaPersona}
-            className="px-4 py-2 bg-[#02A9A9] hover:bg-[#FFC401] text-white hover:text-[#02A9A9] rounded-md font-semibold shadow transition-colors"
-          >
+          className="px-4 py-2 bg-[#02A9A9] hover:bg-[#FFC401] text-white hover:text-[#02A9A9] rounded-md font-semibold shadow transition-colors"
+        >
             Nueva Persona
-          </button>
-        </div>
+        </button>
+      </div>
 
         <Modal isOpen={showForm} onClose={handleCloseModal} title={personaToEdit ? "Editar Persona" : "Agregar Persona"}>
           <PersonaForm
             initialData={personaToEdit}
-            onSubmit={async (data) => {
-              // Aquí irá la lógica para crear/editar
+          onSubmit={async (data) => {
+            // Aquí irá la lógica para crear/editar
               // Si personaToEdit existe, es edición; si no, es creación
               // Puedes llamar a tu servicio aquí
-              setShowForm(false);
+            setShowForm(false);
               setPersonaToEdit(null);
               handleRefreshList();
-            }}
-          />
+          }}
+        />
         </Modal>
 
         <PersonasList
@@ -68,7 +68,7 @@ export default function PersonasPage() {
           }}
           refresh={refreshList}
         />
-      </div>
+    </div>
     </MainLayout>
   );
 } 
