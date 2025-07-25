@@ -1,10 +1,10 @@
 import { usePersonas, usePagination } from '@/hooks';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Pagination from '@/components/ui/Pagination';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const PersonasList = ({ onEdit, onDelete, refresh }) => {
-  const { personas, loading, error, deletePersona } = usePersonas();
+  const { personas, loading, error, deletePersona, fetchPersonas } = usePersonas();
   const [itemsPerPage, setItemsPerPage] = useState(10);
   
   // Datos de prueba para verificar la paginación
@@ -25,6 +25,14 @@ const PersonasList = ({ onEdit, onDelete, refresh }) => {
   
   // Usar datos de prueba si no hay personas reales
   const dataToUse = personas.length > 0 ? personas : testData;
+  
+  // Debug: mostrar los datos que llegan
+  console.log('Datos en PersonasList:', {
+    personas: personas,
+    dataToUse: dataToUse,
+    primeraPersona: dataToUse[0]
+  });
+  
   const {
     currentPage,
     paginatedData,
@@ -38,6 +46,13 @@ const PersonasList = ({ onEdit, onDelete, refresh }) => {
     hasNextPage,
     hasPrevPage
   } = usePagination(dataToUse, itemsPerPage);
+
+  // Escuchar cambios en el prop refresh para actualizar la lista
+  useEffect(() => {
+    if (refresh !== undefined) {
+      fetchPersonas();
+    }
+  }, [refresh, fetchPersonas]);
 
   if (loading) return <div className="text-[#02A9A9]">Loading...</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;

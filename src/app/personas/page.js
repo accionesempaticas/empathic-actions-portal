@@ -2,13 +2,16 @@
 
 import { PersonasList, PersonaForm } from '@/components/personas';
 import { MainLayout } from '@/components/layout';
-import { useState } from 'react';
+import { usePersonas } from '@/hooks';
+import { useState, useCallback } from 'react';
 import Modal from '@/components/ui/Modal';
+import toast from 'react-hot-toast';
 
 export default function PersonasPage() {
+  const { createPersona, updatePersona, deletePersona } = usePersonas();
   const [showForm, setShowForm] = useState(false);
   const [personaToEdit, setPersonaToEdit] = useState(null);
-  const [refreshList, setRefreshList] = useState(false);
+  const [refreshList, setRefreshList] = useState(0);
 
   // Función para abrir el modal en modo crear
   const handleNuevaPersona = () => {
@@ -29,7 +32,64 @@ export default function PersonasPage() {
   };
 
   // Función para refrescar la lista después de crear/editar/eliminar
-  const handleRefreshList = () => setRefreshList((r) => !r);
+  const handleRefreshList = useCallback(() => {
+    setRefreshList(prev => prev + 1);
+  }, []);
+
+  // Función para manejar el envío del formulario
+  const handleSubmitForm = async (formData) => {
+    console.log('Datos recibidos en handleSubmitForm:', formData); // Debug
+    
+    // Limpiar datos antes de enviar al backend
+    const cleanedData = { ...formData };
+    
+    // Si el DNI está vacío, no enviarlo (para que no se convierta a null)
+    if (!cleanedData.dni || cleanedData.dni.trim() === '') {
+      delete cleanedData.dni;
+    }
+    
+    // Si otros campos están vacíos, también limpiarlos
+    Object.keys(cleanedData).forEach(key => {
+      if (cleanedData[key] === '' || cleanedData[key] === null) {
+        delete cleanedData[key];
+      }
+    });
+    
+    console.log('Datos limpios a enviar:', cleanedData); // Debug
+    
+    try {
+      if (personaToEdit) {
+        // Modo edición
+        await updatePersona(personaToEdit.id, cleanedData);
+        toast.success('Persona actualizada exitosamente');
+      } else {
+        // Modo creación
+        await createPersona(cleanedData);
+        toast.success('Persona creada exitosamente');
+      }
+      
+      setShowForm(false);
+      setPersonaToEdit(null);
+      handleRefreshList();
+    } catch (error) {
+      toast.error(error.message || 'Error al procesar la solicitud');
+      console.error('Error:', error);
+    }
+  };
+
+  // Función para manejar la eliminación
+  const handleDeletePersona = async (persona, deletePersona) => {
+    if (window.confirm(`¿Seguro que deseas eliminar a ${persona.first_name} ${persona.last_name}?`)) {
+      try {
+        await deletePersona(persona.id);
+        toast.success('Persona eliminada exitosamente');
+        handleRefreshList();
+      } catch (error) {
+        toast.error(error.message || 'Error al eliminar la persona');
+        console.error('Error:', error);
+      }
+    }
+  };
 
   return (
     <MainLayout>
@@ -47,25 +107,14 @@ export default function PersonasPage() {
         <Modal isOpen={showForm} onClose={handleCloseModal} title={personaToEdit ? "Editar Persona" : "Agregar Persona"}>
           <PersonaForm
             initialData={personaToEdit}
-            onSubmit={async (data) => {
-              // Aquí irá la lógica para crear/editar
-              // Si personaToEdit existe, es edición; si no, es creación
-              // Puedes llamar a tu servicio aquí
-              setShowForm(false);
-              setPersonaToEdit(null);
-              handleRefreshList();
-            }}
+            onSubmit={handleSubmitForm}
+            onCancel={handleCloseModal}
           />
         </Modal>
 
         <PersonasList
           onEdit={handleEditarPersona}
-          onDelete={async (persona, deletePersona) => {
-            if (window.confirm(`¿Seguro que deseas eliminar a ${persona.full_name}?`)) {
-              await deletePersona(persona.id);
-              handleRefreshList();
-            }
-          }}
+          onDelete={handleDeletePersona}
           refresh={refreshList}
         />
       </div>
