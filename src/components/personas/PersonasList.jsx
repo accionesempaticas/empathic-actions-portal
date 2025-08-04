@@ -27,11 +27,11 @@ const PersonasList = ({ onEdit, onDelete, refresh }) => {
   const dataToUse = personas.length > 0 ? personas : testData;
   
   // Debug: mostrar los datos que llegan
-  console.log('Datos en PersonasList:', {
-    personas: personas,
-    dataToUse: dataToUse,
-    primeraPersona: dataToUse[0]
-  });
+  // console.log('Datos en PersonasList:', {
+  //   personas: personas,
+  //   dataToUse: dataToUse,
+  //   primeraPersona: dataToUse[0]
+  // });
   
   const {
     currentPage,
