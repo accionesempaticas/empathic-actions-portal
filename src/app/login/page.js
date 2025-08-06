@@ -67,7 +67,7 @@ export default function LoginPage() {
                     {/* Formulario */}
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {error && <p className="text-red-600 text-center font-medium">{error}</p>}
-
+                        
                         <div>
                             <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
                                 Correo electrónico
