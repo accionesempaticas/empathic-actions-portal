@@ -24,9 +24,18 @@ const personasService = {
   // Crear una nueva persona
   createPerson: async (personData) => {
     try {
+      console.log('Datos enviados al backend (createPerson):', personData); // Debug
       const response = await api.post('/people', personData);
-      return response.data;
+      console.log('Respuesta completa del backend:', response); // Debug completo
+      console.log('Respuesta del backend (data):', response.data); // Debug data
+      
+      // Si la respuesta tiene una estructura anidada, extraer los datos
+      const result = response.data.data || response.data;
+      console.log('Datos extraídos:', result); // Debug datos extraídos
+      
+      return result;
     } catch (error) {
+      console.error('Error completo:', error); // Debug error completo
       throw new Error('Error al crear persona: ' + error.message);
     }
   },
@@ -38,6 +47,16 @@ const personasService = {
       return response.data;
     } catch (error) {
       throw new Error(`Error al actualizar persona ${id}: ${error.message}`);
+    }
+  },
+
+  // Actualizar parcialmente una persona
+  patchPerson: async (id, partialData) => {
+    try {
+      const response = await api.patch(`/people/${id}`, partialData);
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error al actualizar parcialmente persona ${id}: ${error.message}`);
     }
   },
 
