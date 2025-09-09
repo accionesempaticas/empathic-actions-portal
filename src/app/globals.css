@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Magnolia+Script&family=Poppins:wght@400;600;700&display=swap');
+@import "tailwindcss";
+@tailwind utilities;
+
+body {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.font-magnolia {
+  font-family: 'Magnolia Script', cursive;
+}
+@theme {
+  /* Turquesa principal (#02A9A9) */
+  --color-primary-50: #E6F9F9;
+  --color-primary-100: #CCEFEF;
+  --color-primary-200: #99DFDF;
+  --color-primary-300: #66CFCF;
+  --color-primary-400: #33BFBF;
+  --color-primary-500: #02A9A9;
+  --color-primary-600: #028787;
+  --color-primary-700: #016565;
+  --color-primary-800: #014343;
+  --color-primary-900: #002121;
+
+  /* Dorado secundario (#DAA521) */
+  --color-secondary-50: #FDF9ED;
+  --color-secondary-100: #FBF2DB;
+  --color-secondary-200: #F7E5B7;
+  --color-secondary-300: #F3D993;
+  --color-secondary-400: #EFCC6F;
+  --color-secondary-500: #DAA521;
+  --color-secondary-600: #C4951E;
+  --color-secondary-700: #AE841A;
+  --color-secondary-800: #987316;
+  --color-secondary-900: #826212;
+
+  /* Amarillo (#FFC401) */
+  --color-accent-50: #FFFAEB;
+  --color-accent-100: #FFF4D6;
+  --color-accent-200: #FFE9AD;
+  --color-accent-300: #FFDE85;
+  --color-accent-400: #FFD35C;
+  --color-accent-500: #FFC401;
+  --color-accent-600: #E5B001;
+  --color-accent-700: #CC9D01;
+  --color-accent-800: #B28901;
+  --color-accent-900: #997601;
+
+  /* Verde (#18A023) */
+  --color-success-50: #E8F5EA;
+  --color-success-100: #D1EBD4;
+  --color-success-200: #A3D7A9;
+  --color-success-300: #75C37E;
+  --color-success-400: #47AF53;
+  --color-success-500: #18A023;
+  --color-success-600: #16901F;
+  --color-success-700: #14801B;
+  --color-success-800: #127017;
+  --color-success-900: #106013;
+
+  /* Azul aulas (#111576) */
+  --color-info-50: #E8E8F7;
+  --color-info-100: #D1D1EF;
+  --color-info-200: #A3A3DF;
+  --color-info-300: #7575CF;
+  --color-info-400: #4747BF;
+  --color-info-500: #111576;
+  --color-info-600: #0F126A;
+  --color-info-700: #0D0F5E;
+  --color-info-800: #0B0C52;
+  --color-info-900: #090946;
+
+  /* Gris (#E3E3E3) */
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F5F5F5;
+  --color-neutral-200: #EEEEEE;
+  --color-neutral-300: #E3E3E3;
+  --color-neutral-400: #BDBDBD;
+  --color-neutral-500: #9E9E9E;
+  --color-neutral-600: #757575;
+  --color-neutral-700: #616161;
+  --color-neutral-800: #424242;
+  --color-neutral-900: #212121;
+}
+

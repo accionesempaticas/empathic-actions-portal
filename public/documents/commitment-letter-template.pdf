@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Compromiso - Programa de Voluntariado</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: white;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #02A9A9;
+            padding-bottom: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #02A9A9;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #02A9A9;
+            font-size: 28px;
+            margin: 0;
+        }
+        h2 {
+            color: #666;
+            font-size: 18px;
+            margin: 10px 0 0 0;
+        }
+        .content {
+            margin: 30px 0;
+            text-align: justify;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .content ul {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        .content li {
+            margin-bottom: 8px;
+        }
+        .signature-section {
+            margin-top: 60px;
+            border-top: 1px solid #ddd;
+            padding-top: 30px;
+        }
+        .signature-box {
+            border: 2px dashed #02A9A9;
+            height: 120px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fffe;
+            color: #02A9A9;
+            font-style: italic;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">EMPATHIC ACTIONS</div>
+        <h1>CARTA DE COMPROMISO</h1>
+        <h2>Programa de Voluntariado Social</h2>
+    </div>
+
+    <div class="content">
+        <p><strong>Estimado/a Voluntario/a,</strong></p>
+        
+        <p>A través del presente documento, yo <strong>[NOMBRE COMPLETO]</strong>, identificado/a con documento <strong>[TIPO DE DOCUMENTO] N° [NÚMERO]</strong>, manifiesto mi voluntad de participar en el Programa de Voluntariado de <strong>Empathic Actions</strong> y me comprometo a:</p>
+
+        <ul>
+            <li><strong>Participar activamente</strong> en las actividades programadas del voluntariado, cumpliendo con los horarios y compromisos establecidos.</li>
+            <li><strong>Mantener confidencialidad</strong> sobre la información sensible a la que pueda tener acceso durante mis actividades voluntarias.</li>
+            <li><strong>Actuar con integridad</strong> y representar dignamente los valores y principios de la organización en todas mis interacciones.</li>
+            <li><strong>Comunicar oportunamente</strong> cualquier dificultad, conflicto de interés o impedimento para cumplir con mis responsabilidades.</li>
+            <li><strong>Respetar la diversidad</strong> y promover un ambiente inclusivo y libre de discriminación.</li>
+            <li><strong>Cumplir con las políticas</strong> y procedimientos establecidos por la organización.</li>
+        </ul>
+
+        <div class="highlight">
+            <p><strong>Importante:</strong> Entiendo que el voluntariado es una actividad altruista y que no recibiré remuneración económica por mi participación. También comprendo que el incumplimiento de estos compromisos puede resultar en la terminación de mi participación en el programa.</p>
+        </div>
+
+        <p>Confirmo que he leído y entendido completamente los términos de este compromiso y que mi participación en el programa es completamente voluntaria.</p>
+
+        <p><strong>Fecha:</strong> _______________</p>
+        <p><strong>Ciudad:</strong> _______________</p>
+    </div>
+
+    <div class="signature-section">
+        <p><strong>Firma Digital del Voluntario:</strong></p>
+        <div class="signature-box">
+            Área reservada para firma digital
+        </div>
+        
+        <p>_________________________________</p>
+        <p><strong>Nombre:</strong> [NOMBRE COMPLETO]</p>
+        <p><strong>Documento:</strong> [TIPO] N° [NÚMERO]</p>
+        <p><strong>Email:</strong> [EMAIL]</p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Empathic Actions</strong> - Programa de Voluntariado Social</p>
+        <p>www.empathicactions.org | contacto@empathicactions.org</p>
+        <p>Este documento es de carácter legal y constituye un compromiso formal entre las partes.</p>
+    </div>
+</body>
+</html>
