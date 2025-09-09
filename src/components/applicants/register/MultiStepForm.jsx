@@ -126,7 +126,12 @@ const MultiStepForm = () => {
             localStorage.setItem('registrationTimestamp', Date.now().toString());
             setShowSuccessModal(true);
         } catch (err) {
-            setShowErrorModal(true);
+            // Verificar si es un error de límite de IP
+            if (err.response && err.response.status === 429 && err.response.data.error === 'IP_REGISTRATION_LIMIT_EXCEEDED') {
+                alert('⚠️ Límite de Registros Alcanzado\n\n' + err.response.data.message);
+            } else {
+                setShowErrorModal(true);
+            }
             console.error("Submission error:", err);
         }
     };
