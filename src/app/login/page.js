@@ -16,7 +16,14 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (user && !loading) {
-            router.push(user.role === 'admin' ? '/admin/users' : '/applicants/complete-profile');
+            if (user.role === 'admin') {
+                router.push('/admin/users');
+            } else {
+                // Si el usuario no es admin, cerrar sesión automáticamente
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user');
+                setError('Acceso denegado. Solo los administradores pueden ingresar al sistema.');
+            }
         }
     }, [user, loading, router]);
 
@@ -32,7 +39,12 @@ export default function LoginPage() {
             if (userData.role === 'admin') {
                 router.push('/admin/users');
             } else {
-                router.push('/applicants/complete-profile');
+                // Solo permitir acceso a administradores
+                setError('Acceso denegado. Solo los administradores pueden ingresar al sistema.');
+                // Limpiar sesión del usuario no admin
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user');
+                return;
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Error de inicio de sesión. Verifica tus credenciales.');
@@ -100,10 +112,10 @@ export default function LoginPage() {
                         <div className="w-full lg:w-1/2 p-12">
                             <div className="max-w-md mx-auto">
                                 <h2 className="text-3xl font-bold text-center text-neutral-800 mb-2">
-                                    Iniciar Sesión
+                                    Acceso Administrativo
                                 </h2>
                                 <p className="text-center text-neutral-500 mb-8">
-                                    Ingresa tus credenciales para acceder
+                                    Solo administradores pueden acceder al sistema
                                 </p>
 
                                 {/* Formulario */}
