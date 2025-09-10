@@ -122,97 +122,145 @@ export default function DocumentSigner({ user }) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 md:p-6">
-            <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-                <h3 className="font-bold text-lg mb-2 text-gray-800">INSTRUCCIONES:</h3>
-                <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li>Lee cuidadosamente todo el documento.</li>
-                    <li>Usa tu mouse o trackpad para crear tu firma digital.</li>
-                    <li>Una vez revisado, procede a firmarlo.</li>
-                    <li>Al finalizar, serás redirigido a la página de confirmación.</li>
-                </ul>
+        <div className="space-y-8">
+            {/* Instrucciones en la parte superior */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-800 mb-2">Instrucciones:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
+                    <div>
+                        <p>• Lee cuidadosamente todo el documento</p>
+                        <p>• Usa tu mouse o trackpad para crear tu firma digital</p>
+                    </div>
+                    <div>
+                        <p>• Una vez revisado, procede a firmarlo</p>
+                        <p>• Al finalizar, serás redirigido a la página de confirmación</p>
+                    </div>
+                </div>
             </div>
 
-            <div className="mb-6">
-                <h3 className="font-bold text-lg mb-2 text-gray-800">DOCUMENTO DE COMPROMISO</h3>
-                {documentUrl ? (
-                    <iframe src={documentUrl} className="w-full h-[600px] border rounded-lg" title="Documento de Compromiso"></iframe>
-                ) : (
-                    <div className="w-full h-[600px] border rounded-lg flex flex-col items-center justify-center bg-gray-100 text-gray-500">
-                        {documentUrl === undefined && !loading && (
-                            <p>Cargando documento...</p>
-                        )}
-                        {loading && (
-                            <>
-                                <svg className="animate-spin h-8 w-8 text-gray-400 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                <p className="font-bold">Generando tu carta de compromiso personalizada...</p>
-                            </>
-                        )}
-                        {documentUrl === null && (
-                            <div className="text-center">
-                                <p className="font-bold text-red-500">Error al cargar el documento.</p>
-                                <p>Verifica tu conexión a internet y que el servidor esté disponible.</p>
+            <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+                {/* Visor de PDF - Más grande */}
+                <div className="xl:col-span-3 bg-white rounded-lg shadow-lg p-6">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                        Documento de Compromiso
+                    </h3>
+                    
+                    <div className="border rounded-lg overflow-hidden bg-white">
+                        {documentUrl ? (
+                            <iframe
+                                src={documentUrl}
+                                className="w-full h-[600px]"
+                                title="Documento de Compromiso"
+                                style={{ border: 'none' }}
+                            />
+                        ) : (
+                            <div className="h-[600px] flex items-center justify-center">
+                                <div className="text-center">
+                                    {loading && (
+                                        <>
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-turquesa-500 mx-auto mb-4"></div>
+                                            <p className="text-gray-600 font-bold">Generando tu carta de compromiso personalizada...</p>
+                                        </>
+                                    )}
+                                    {documentUrl === undefined && !loading && (
+                                        <>
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-turquesa-500 mx-auto mb-4"></div>
+                                            <p className="text-gray-600">Cargando documento...</p>
+                                            <p className="text-sm text-gray-500 mt-2">
+                                                Generando tu carta de compromiso personalizada
+                                            </p>
+                                        </>
+                                    )}
+                                    {documentUrl === null && (
+                                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-700 font-bold">Error al cargar el documento.</p>
+                                            <p className="text-red-600 text-sm">
+                                                Verifica tu conexión a internet y que el servidor esté disponible.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>
-                )}
-            </div>
-
-            <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-                <h3 className="font-bold text-lg mb-2 text-gray-800">ÁREA DE FIRMA</h3>
-                <p className="mb-2 text-sm text-gray-600">Firma aquí usando tu mouse o trackpad.</p>
-                <div className="bg-white border border-gray-300 rounded-lg touch-none">
-                    <SignatureCanvas
-                        ref={signatureRef}
-                        penColor='black'
-                        canvasProps={{ className: 'w-full h-48 rounded-lg' }}
-                        onEnd={handleSignatureEnd}
-                    />
                 </div>
-                <button
-                    type="button"
-                    onClick={clearSignature}
-                    className="mt-2 text-sm text-blue-600 hover:underline"
-                >
-                    <FaEraser className="inline mr-1" />
-                    Limpiar
-                </button>
-                {signature && (
-                    <div className="mt-4">
-                        <h4 className="font-bold text-sm text-gray-800">VISTA PREVIA DE TU FIRMA:</h4>
-                        <img src={signature} alt="Vista previa de la firma" className="border rounded-lg mt-2 bg-white" />
-                    </div>
-                )}
-            </div>
 
-            <div className="text-center">
-                <p className="text-sm text-gray-600 mb-4">
-                    Importante: Al firmar confirmas que has leído y aceptas los términos y condiciones del programa.
-                </p>
-                <button
-                    type="button"
-                    onClick={handleSignDocument}
-                    disabled={isSignatureEmpty || loading || !documentUrl}
-                    className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center mx-auto"
-                >
-                    {loading ? (
-                        <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Procesando...
-                        </>
-                    ) : (
-                        <>
-                            <FaCheck className="inline mr-2" />
-                            Firmar Documento
-                        </>
+                {/* Panel de Firma - Más ancho */}
+                <div className="xl:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                        <FaSignature className="inline-block mr-2" />
+                        Área de Firma
+                    </h3>
+
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 mb-6">
+                        <p className="text-sm text-gray-600 mb-4 text-center">
+                            Firma aquí usando tu mouse o trackpad
+                        </p>
+                        
+                        <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white">
+                            <SignatureCanvas
+                                ref={signatureRef}
+                                penColor="black"
+                                backgroundColor="rgba(255,255,255,1)"
+                                canvasProps={{
+                                    className: 'w-full h-48'
+                                }}
+                                onEnd={handleSignatureEnd}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex space-x-3 mb-6">
+                        <button
+                            onClick={clearSignature}
+                            className="flex-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                            type="button"
+                        >
+                            <FaEraser className="inline-block mr-2" />
+                            Limpiar
+                        </button>
+                    </div>
+
+                    {signature && (
+                        <div className="mb-6">
+                            <h4 className="text-sm font-semibold text-gray-700 mb-2">Vista previa de tu firma:</h4>
+                            <div className="border rounded-lg p-4 bg-gray-50">
+                                <img src={signature} alt="Firma" className="max-w-full h-auto" />
+                            </div>
+                        </div>
                     )}
-                </button>
+
+                    <div className="space-y-4">
+                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <p className="text-sm text-yellow-800">
+                                <strong>Importante:</strong> Al firmar confirmas que has leído y aceptas los términos y condiciones del programa.
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleSignDocument}
+                            disabled={isSignatureEmpty || loading || !documentUrl}
+                            className={`w-full font-bold py-3 px-6 rounded-lg transition duration-300 ${
+                                isSignatureEmpty || loading || !documentUrl
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-primary-500 hover:bg-primary-600 text-white'
+                            }`}
+                        >
+                            {loading ? (
+                                <div className="flex items-center justify-center">
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                    Procesando...
+                                </div>
+                            ) : (
+                                <>
+                                    <FaCheck className="inline-block mr-2" />
+                                    Firmar Documento
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
