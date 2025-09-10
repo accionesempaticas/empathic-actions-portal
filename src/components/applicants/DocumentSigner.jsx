@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaSignature, FaEraser, FaCheck } from 'react-icons/fa';
 import SignatureCanvas from 'react-signature-canvas';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+import api from '@/api/api';
 
 export default function DocumentSigner({ user }) {
     const [documentUrl, setDocumentUrl] = useState(undefined); // Use undefined to distinguish from null on error
@@ -26,11 +25,13 @@ export default function DocumentSigner({ user }) {
                 group: user.group || 'General',
                 province: user.location?.province || user.province || 'Lima'
             });
-            const documentEndpoint = `${API_URL}/api/documents/commitment-letter/${user.id}?${params}`;
-
-            fetch(documentEndpoint)
+            
+            // Usar la instancia de api que ya tiene la baseURL configurada
+            api.get(`/documents/commitment-letter/${user.id}?${params}`)
                 .then(response => {
-                    if (response.ok) {
+                    if (response.status === 200) {
+                        // Construir la URL completa para el iframe usando la baseURL de api
+                        const documentEndpoint = `${api.defaults.baseURL}/documents/commitment-letter/${user.id}?${params}`;
                         setDocumentUrl(documentEndpoint);
                     } else {
                         console.error('Error al cargar el documento:', response.status);
@@ -87,16 +88,14 @@ export default function DocumentSigner({ user }) {
             formData.append('user_id', user.id);
             formData.append('document_type', 'commitment_letter');
 
-            const response = await fetch(`${API_URL}/api/sign-document`, {
-                method: 'POST',
+            const response = await api.post('/sign-document', formData, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    'Content-Type': 'multipart/form-data',
                 },
-                body: formData
             });
 
-            if (response.ok) {
-                const result = await response.json();
+            if (response.status === 200) {
+                const result = response.data;
 
                 if (result.signed_document_url) {
                     sessionStorage.setItem('signedDocumentUrl', result.signed_document_url);
@@ -107,17 +106,7 @@ export default function DocumentSigner({ user }) {
 
                 window.location.href = '/applicants/registration-complete';
             } else {
-                let errorText;
-                try {
-                    const errorData = await response.json();
-                    console.error('Error data from server:', errorData);
-                    errorText = errorData.message || `Error ${response.status}: ${response.statusText}`;
-                } catch (parseError) {
-                    console.error('Error parsing error response:', parseError);
-                    const textResponse = await response.text();
-                    console.error('Raw error response:', textResponse);
-                    errorText = `Error ${response.status}: ${response.statusText}`;
-                }
+                const errorText = response.data?.message || `Error ${response.status}: ${response.statusText}`;
                 throw new Error(errorText);
             }
         } catch (error) {
