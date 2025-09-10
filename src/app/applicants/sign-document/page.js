@@ -18,7 +18,7 @@ export default function SignDocumentPage() {
 
     const checkIfUserAlreadySigned = async (userId) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8002/api/check-document-status/${userId}`);
+            const response = await fetch(`http://127.0.0.1:8000/api/check-document-status/${userId}`);
             const result = await response.json();
             
             if (result.has_signed_document) {

@@ -176,9 +176,17 @@ export default function UserManagement() {
                 }
 
                 console.log('Updating user with data:', updateData);
-                const updatedUser = await updateUser(currentUser.id, updateData);
-                console.log('User updated:', updatedUser);
-                toast.success("¡Usuario actualizado exitosamente!");
+                console.log('Current user ID:', currentUser.id);
+                try {
+                    const updatedUser = await updateUser(currentUser.id, updateData);
+                    console.log('User updated:', updatedUser);
+                    toast.success("¡Usuario actualizado exitosamente!");
+                } catch (updateError) {
+                    console.error('Update error details:', updateError);
+                    console.error('Update error response:', updateError?.response);
+                    console.error('Update error data:', updateError?.response?.data);
+                    throw updateError;
+                }
             } else {
                 const createData = {
                     ...formData,

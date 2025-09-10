@@ -63,7 +63,9 @@ export function UsersProvider({ children }) {
         setLoading(true);
         setError(null);
         try {
+            console.log(`Updating user ${id} with data:`, userData);
             const response = await api.put(`/people/${id}`, userData);
+            console.log('API response for update:', response);
             setUsers((prevUsers) =>
                 prevUsers.map((user) => (user.id === id ? response.data : user))
             ); // Update state
@@ -71,6 +73,9 @@ export function UsersProvider({ children }) {
         } catch (err) {
             setError(err);
             console.error(`Failed to update user with ID ${id}:`, err);
+            console.error('Full error object:', err);
+            console.error('Error response:', err?.response);
+            console.error('Error response data:', err?.response?.data);
             throw err;
         } finally {
             setLoading(false);
