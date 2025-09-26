@@ -47,7 +47,7 @@ export default function DocumentSigner({ user }) {
                 province: user.location?.province || user.province || 'Lima'
             });
             
-            const documentEndpoint = `empatic-api-production.up.railway.app/api/documents/commitment-letter/${user.id}?${params}`;
+            const documentEndpoint = `https://empatic-api-production.up.railway.app/api/documents/commitment-letter/${user.id}?${params}`;
             
             // Verificar si el endpoint está disponible
             fetch(documentEndpoint, {
@@ -143,12 +143,12 @@ export default function DocumentSigner({ user }) {
             formData.append('user_id', user.id);
             formData.append('document_type', 'commitment_letter');
             
-            console.log('📤 Enviando request a:', 'empatic-api-production.up.railway.app/api/sign-document');
+            console.log('📤 Enviando request a:', 'https://empatic-api-production.up.railway.app/api/sign-document');
             console.log('📤 FormData keys:', Array.from(formData.keys()));
             console.log('📤 User ID:', user.id);
             console.log('📤 Token:', localStorage.getItem('access_token') ? 'Presente' : 'Ausente');
 
-            const response = await fetch('empatic-api-production.up.railway.app/api/sign-document', {
+            const response = await fetch('https://empatic-api-production.up.railway.app/api/sign-document', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
