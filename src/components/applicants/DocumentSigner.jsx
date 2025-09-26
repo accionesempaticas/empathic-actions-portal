@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaSignature, FaEraser, FaCheck } from 'react-icons/fa';
 import SignatureCanvas from 'react-signature-canvas';
+import { useRouter } from 'next/navigation';
 
 export default function DocumentSigner({ user }) {
     const [documentUrl, setDocumentUrl] = useState(null);
@@ -10,7 +11,27 @@ export default function DocumentSigner({ user }) {
     const [isSignatureEmpty, setIsSignatureEmpty] = useState(true);
     const [loading, setLoading] = useState(false);
     const [documentSigned, setDocumentSigned] = useState(false);
+    const [isProcessingSignature, setIsProcessingSignature] = useState(false);
+    const allowNavigation = useRef(false); // Bandera para permitir navegación
     const signatureRef = useRef(null);
+    const router = useRouter();
+
+    // Función para prevenir la navegación accidental (usando useCallback)
+    const handleBeforeUnload = useCallback((e) => {
+        // Si se permite la navegación, no hacer nada
+        if (allowNavigation.current) {
+            return undefined;
+        }
+        
+        // Solo prevenir si no estamos procesando la firma y el documento no está firmado
+        if (!isProcessingSignature && !documentSigned) {
+            e.preventDefault();
+            e.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
+            return 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
+        }
+        // Si estamos procesando o ya terminamos, no hacer nada (retornar undefined)
+        return undefined;
+    }, [isProcessingSignature, documentSigned]);
 
     // Cargar documento de compromiso personalizado
     useEffect(() => {
@@ -26,7 +47,7 @@ export default function DocumentSigner({ user }) {
                 province: user.location?.province || user.province || 'Lima'
             });
             
-            const documentEndpoint = `http://127.0.0.1:8002/api/documents/commitment-letter/${user.id}?${params}`;
+            const documentEndpoint = `http://127.0.0.1:8000/api/documents/commitment-letter/${user.id}?${params}`;
             
             // Verificar si el endpoint está disponible
             fetch(documentEndpoint, {
@@ -49,7 +70,14 @@ export default function DocumentSigner({ user }) {
                     setDocumentUrl(null);
                 });
         }
-    }, [user]);
+
+        // Lógica para prevenir la navegación accidental
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [user, documentSigned]);
 
     const clearSignature = () => {
         if (signatureRef.current) {
@@ -66,6 +94,8 @@ export default function DocumentSigner({ user }) {
             if (!isEmpty) {
                 const signatureData = signatureRef.current.toDataURL();
                 setSignature(signatureData);
+            } else {
+                setSignature(null);
             }
         }
     };
@@ -77,43 +107,48 @@ export default function DocumentSigner({ user }) {
             event.stopPropagation();
         }
         
-        // Deshabilitar temporalmente el evento beforeunload durante la firma
-        const originalBeforeUnload = window.onbeforeunload;
-        window.onbeforeunload = null;
-        
-        // También remover event listeners
-        const beforeUnloadEvents = [];
-        if (window.addEventListener) {
-            // No podemos remover específicamente sin tener la referencia,
-            // pero podemos prevenir que se dispare temporalmente
-        }
-        
         console.log('🔵 Iniciando proceso de firma...');
         
-        if (!signature) {
-            console.log('No hay firma');
-            alert('Por favor, primero firma el documento.');
-            // Restaurar el evento beforeunload
-            window.onbeforeunload = originalBeforeUnload;
+        // Verificar si ya está en proceso
+        if (loading) {
+            console.log('⏸️ Ya hay un proceso en curso, ignorando click');
             return;
         }
 
-        console.log(' Firma presente, datos del usuario:', user);
+        // Verificar firma nuevamente al momento del click
+        const currentSignatureEmpty = signatureRef.current ? signatureRef.current.isEmpty() : true;
+        const currentSignature = currentSignatureEmpty ? null : signatureRef.current.toDataURL();
+        
+        console.log('Current signature empty:', currentSignatureEmpty);
+        console.log('Current signature data:', currentSignature ? 'Presente' : 'Ausente');
+
+        if (currentSignatureEmpty || !currentSignature) {
+            console.log('❌ No hay firma válida');
+            alert('Por favor, primero firma el documento.');
+            return;
+        }
+
+        // Actualizar estados con los valores actuales
+        setSignature(currentSignature);
+        setIsSignatureEmpty(false);
+        
+        console.log('✅ Firma válida, iniciando proceso...');
         setLoading(true);
+        setIsProcessingSignature(true); // Marcar que estamos procesando
         
         try {
             console.log('🔵 Preparando FormData...');
             const formData = new FormData();
-            formData.append('signature', signature);
+            formData.append('signature', currentSignature);
             formData.append('user_id', user.id);
             formData.append('document_type', 'commitment_letter');
             
-            console.log('📤 Enviando request a:', 'http://127.0.0.1:8002/api/sign-document');
+            console.log('📤 Enviando request a:', 'http://127.0.0.1:8000/api/sign-document');
             console.log('📤 FormData keys:', Array.from(formData.keys()));
             console.log('📤 User ID:', user.id);
             console.log('📤 Token:', localStorage.getItem('access_token') ? 'Presente' : 'Ausente');
 
-            const response = await fetch('http://127.0.0.1:8002/api/sign-document', {
+            const response = await fetch('http://127.0.0.1:8000/api/sign-document', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -141,48 +176,12 @@ export default function DocumentSigner({ user }) {
                 sessionStorage.setItem('documentCompleted', 'true');
                 sessionStorage.setItem('completionTimestamp', Date.now().toString());
                 
-                // No restaurar beforeunload ya que vamos a abandonar la página
-                console.log('✅ Redirigiendo a página de completion...');
+                // PERMITIR navegación antes de redirigir
+                allowNavigation.current = true;
                 
-                // Redirigir directamente a página de agradecimiento
+                // Redirigir INMEDIATAMENTE sin actualizar estados que causen re-render
                 window.location.href = '/applicants/registration-complete';
-
-                /* LÓGICA DE DESCARGA COMENTADA - Por si se necesita después
-                if (result.signed_document_url) {
-                    console.log('📥 Iniciando descarga automática del documento firmado');
-                    
-                    try {
-                        // Descargar el archivo usando fetch para evitar navegación
-                        const response = await fetch(result.signed_document_url);
-                        const blob = await response.blob();
-                        
-                        // Crear un enlace temporal para la descarga
-                        const link = document.createElement('a');
-                        const url = window.URL.createObjectURL(blob);
-                        link.href = url;
-                        link.download = `Carta_Compromiso_Firmada_${user.first_name}_${user.last_name}.html`;
-                        link.style.display = 'none';
-                        
-                        // Añadir al DOM temporalmente
-                        document.body.appendChild(link);
-                        
-                        // Simular click para iniciar descarga
-                        link.click();
-                        
-                        // Limpiar recursos
-                        document.body.removeChild(link);
-                        window.URL.revokeObjectURL(url);
-                        
-                        console.log('✅ Descarga completada exitosamente');
-                        
-                    } catch (downloadError) {
-                        console.error('❌ Error en la descarga:', downloadError);
-                    }
-                }
-                */
                 
-                // NO mostrar el estado de éxito porque vamos a redirigir
-                // setDocumentSigned(true);
             } else {
                 console.log('❌ Response NOT OK');
                 let errorText;
@@ -202,12 +201,18 @@ export default function DocumentSigner({ user }) {
             console.error('❌ Catch error:', error);
             console.error('❌ Error stack:', error.stack);
             alert(`Error al procesar la firma: ${error.message}`);
-            // Restaurar el evento beforeunload en caso de error
-            window.onbeforeunload = originalBeforeUnload;
         } finally {
             setLoading(false);
+            setIsProcessingSignature(false);
             console.log('🔵 Proceso terminado');
         }
+    };
+
+    // Función auxiliar para verificar si puede firmar
+    const canSign = () => {
+        if (loading) return false;
+        if (signatureRef.current && !signatureRef.current.isEmpty()) return true;
+        return !isSignatureEmpty && signature;
     };
 
     if (documentSigned) {
@@ -279,7 +284,7 @@ export default function DocumentSigner({ user }) {
                                     {documentUrl === null && (
                                         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                                             <p className="text-red-700 text-sm">
-                                                Error al cargar el documento. Verifica que el servidor esté funcionando en http://127.0.0.1:8002
+                                                Error al cargar el documento. Verifica que el servidor esté funcionando en http://127.0.0.1:8000
                                             </p>
                                         </div>
                                     )}
@@ -355,9 +360,9 @@ export default function DocumentSigner({ user }) {
                         <button
                             type="button"
                             onClick={handleSignDocument}
-                            disabled={isSignatureEmpty || loading}
+                            disabled={!canSign()}
                             className={`w-full font-bold py-3 px-6 rounded-lg transition duration-300 ${
-                                isSignatureEmpty || loading
+                                !canSign()
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     : 'bg-primary-500 hover:bg-primary-600 text-white'
                             }`}

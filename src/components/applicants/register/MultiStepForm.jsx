@@ -40,9 +40,14 @@ const MultiStepForm = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value, type, checked, files } = e.target;
 
-        if (name.includes('.')) {
+        if (type === 'file') {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: files ? files[0] : value
+            }));
+        } else if (name.includes('.')) {
             const [parent, child] = name.split('.');
             setFormData(prevData => ({
                 ...prevData,
@@ -62,11 +67,6 @@ const MultiStepForm = () => {
             setFormData(prevData => ({
                 ...prevData,
                 [name]: updatedRoles
-            }));
-        } else if (type === 'file') {
-            setFormData(prevData => ({
-                ...prevData,
-                [name]: e.target.files[0]
             }));
         } else if (type === 'checkbox') {
             setFormData(prevData => ({
@@ -89,17 +89,18 @@ const MultiStepForm = () => {
             if (formData.hasOwnProperty(key)) {
                 if (Array.isArray(formData[key])) {
                     formData[key].forEach(item => {
-                        data.append(key, item);
+                        // Para compatibilidad con PHP/Laravel, a menudo se usa `key[]` para arrays
+                        data.append(`${key}[]`, item);
                     });
                 } else if (typeof formData[key] === 'object' && formData[key] !== null && !(formData[key] instanceof File)) {
                     for (const nestedKey in formData[key]) {
                         if (formData[key].hasOwnProperty(nestedKey)) {
-                            data.append(`${key}.${nestedKey}`, formData[key][nestedKey]);
+                            data.append(`${key}[${nestedKey}]`, formData[key][nestedKey]);
                         }
                     }
                 } else if (formData[key] instanceof File) {
                     data.append(key, formData[key]);
-                } else {
+                } else if (formData[key] !== null && formData[key] !== undefined){
                     data.append(key, formData[key]);
                 }
             }
@@ -117,7 +118,7 @@ const MultiStepForm = () => {
                 document_number: formData.document_number,
                 area: formData.area,
                 group: formData.group,
-                province: formData['location.province'] || formData.location?.province || 'Lima'
+                province: formData.location?.province || 'Lima'
             };
             
             // Marcar que viene del registro y guardar datos con timestamp

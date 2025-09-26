@@ -1,131 +1,144 @@
 'use client';
 
 import React from 'react';
+import { FaFilePdf, FaImage, FaUpload, FaTrash } from 'react-icons/fa';
 
-const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
+// Componente Reutilizable para Carga de Archivos
+const FileInput = ({ name, label, value, onChange, accept, required, helpText, referenceLink }) => {
     const handleFileChange = (e) => {
-        handleChange({ 
+        onChange({ 
             target: { 
-                name: e.target.name, // ← usa el name real del input (cv_file, pi_file o pf_file)
-                value: e.target.files[0] 
+                name: name,
+                files: e.target.files,
+                type: 'file'
             } 
         });
     };
 
-    const isStepComplete = () => {
-        const requiredFields = ['cv_file', 'pi_file', 'pf_file', 'dni_file', 'cul_file'];
-        return requiredFields.every(field => {
-            return formData[field];
+    const removeFile = () => {
+        onChange({ 
+            target: { 
+                name: name,
+                value: null,
+                type: 'file'
+            } 
         });
     };
 
-    return (
-        <div className="p-8">
-            <h2 className="text-xl font-semibold mb-4">Documentos</h2>
+    const isImage = value && value.type.startsWith('image/');
 
-            {/* CV Upload */}
-            <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-2">Currículum Vitae</h3>
-                <div>
-                    <label htmlFor="cv_file" className="block text-sm font-medium text-gray-700">Adjunta tu CV actualizado en PDF *</label>
+    return (
+        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+            <label htmlFor={name} className="block text-lg font-semibold text-gray-800 mb-3">
+                {label}
+                {referenceLink && (
+                    <a href={referenceLink} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-500 hover:text-blue-700 underline text-sm font-normal">
+                        (Ver referencia)
+                    </a>
+                )}
+            </label>
+            
+            {value ? (
+                <div className="relative group">
+                    {isImage ? (
+                        <img src={URL.createObjectURL(value)} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-2" />
+                    ) : (
+                        <div className="flex items-center justify-center h-48 bg-gray-100 rounded-lg mb-2">
+                            <FaFilePdf className="text-5xl text-red-500" />
+                        </div>
+                    )}
+                    <p className="text-sm text-gray-600 truncate">{value.name}</p>
+                    <button 
+                        type="button"
+                        onClick={removeFile}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                        <FaTrash />
+                    </button>
+                </div>
+            ) : (
+                <label htmlFor={name} className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-300">
+                    <FaUpload className="text-4xl text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">{helpText}</p>
                     <input
                         type="file"
-                        name="cv_file"
-                        id="cv_file"
-                        accept=".pdf"
+                        name={name}
+                        id={name}
+                        accept={accept}
                         onChange={handleFileChange}
-                        className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                        required
+                        className="hidden"
+                        required={required}
                     />
-                    <p className="mt-1 text-sm text-gray-500">Solo archivos PDF (máx. 10MB)</p>
-                    {formData.cv_file && <p className="mt-2 text-sm text-green-600">Archivo seleccionado: {formData.cv_file.name}</p>}
-                </div>
+                </label>
+            )}
+        </div>
+    );
+};
+
+const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
+    const isStepComplete = () => {
+        const requiredFields = ['cv_file', 'pi_file', 'pf_file', 'dni_file', 'cul_file'];
+        return requiredFields.every(field => formData[field]);
+    };
+
+    return (
+        <div className="p-8 bg-gray-50 rounded-3xl">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Carga de Documentos</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <FileInput 
+                    name="cv_file"
+                    label="Currículum Vitae (PDF)"
+                    value={formData.cv_file}
+                    onChange={handleChange}
+                    accept=".pdf,.doc,.docx"
+                    required
+                    helpText="Adjunta tu CV actualizado"
+                />
+                <FileInput 
+                    name="pi_file"
+                    label="Foto Informal"
+                    value={formData.pi_file}
+                    onChange={handleChange}
+                    accept=".jpg, .jpeg, .png"
+                    required
+                    helpText="Sube una foto tuya"
+                />
+                <FileInput 
+                    name="pf_file"
+                    label="Foto Formal"
+                    value={formData.pf_file}
+                    onChange={handleChange}
+                    accept=".jpg, .jpeg, .png"
+                    required
+                    helpText="Sube una foto formal"
+                    referenceLink="https://www.canva.com/design/DAGg1L_x5HE/HGCnz8dCfluk3NtcF7cRcQ/edit"
+                />
+                <FileInput 
+                    name="dni_file"
+                    label="Documento de Identidad"
+                    value={formData.dni_file}
+                    onChange={handleChange}
+                    accept=".pdf, .jpg, .jpeg, .png"
+                    required
+                    helpText="Adjunta tu DNI/CE"
+                />
+                <FileInput 
+                    name="cul_file"
+                    label="Certificado Único Laboral"
+                    value={formData.cul_file}
+                    onChange={handleChange}
+                    accept=".pdf, .jpg, .jpeg, .png"
+                    required
+                    helpText="Adjunta tu CUL"
+                />
             </div>
 
-            {/* Photos Upload */}
-            <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-800 mb-2">Fotos</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="pi_file" className="block text-sm font-medium text-gray-700">Adjunta una foto informal *</label>
-                        <input
-                            type="file"
-                            name="pi_file"
-                            id="pi_file"
-                            accept=".jpg, .jpeg, .png"
-                            onChange={handleFileChange}
-                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            required
-                        />
-                        <p className="mt-1 text-sm text-gray-500">Solo archivos JPG, JPEG o PNG (máx. 10MB)</p>
-                        {formData.pi_file && <p className="mt-2 text-sm text-green-600">Imagen seleccionada: {formData.pi_file.name}</p>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="pf_file" className="block text-sm font-medium text-gray-700">Adjunta una foto formal * <a 
-                                    href="https://www.canva.com/design/DAGg1L_x5HE/HGCnz8dCfluk3NtcF7cRcQ/edit" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    className="ml-1 text-black-100 hover:text-black-300 underline font-low"
-                                > 
-                                <strong>(Referencia)</strong>
-                                </a></label>
-                        <input
-                            type="file"
-                            name="pf_file"
-                            id="pf_file"
-                            accept=".jpg, .jpeg, .png"
-                            onChange={handleFileChange}
-                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            required
-                        />
-                        <p className="mt-1 text-sm text-gray-500">Solo archivos JPG, JPEG o PNG (máx. 10MB)</p>
-                        </div>
-                        {formData.pf_file && <p className="mt-2 text-sm text-green-600">Imagen seleccionada: {formData.pf_file.name}</p>}
-                </div>
-            </div>
-
-            {/* DNI and CUL Upload */}
-            <div>
-                <h3 className="text-lg font-medium text-gray-800 mb-2">Documentos de Identidad y Laborales</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label htmlFor="dni_file" className="block text-sm font-medium text-gray-700">Adjunta tu DNI *</label>
-                        <input
-                            type="file"
-                            name="dni_file"
-                            id="dni_file"
-                            accept=".pdf, .jpg, .jpeg, .png"
-                            onChange={handleFileChange}
-                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            required
-                        />
-                        <p className="mt-1 text-sm text-gray-500">PDF o imagen (máx. 10MB)</p>
-                        {formData.dni_file && <p className="mt-2 text-sm text-green-600">Archivo seleccionado: {formData.dni_file.name}</p>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="cul_file" className="block text-sm font-medium text-gray-700">Adjunta tu Certificado Único Laboral (CUL) *</label>
-                        <input
-                            type="file"
-                            name="cul_file"
-                            id="cul_file"
-                            accept=".pdf, .jpg, .jpeg, .png"
-                            onChange={handleFileChange}
-                            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                            required
-                        />
-                        <p className="mt-1 text-sm text-gray-500">PDF o imagen (máx. 10MB)</p>
-                        {formData.cul_file && <p className="mt-2 text-sm text-green-600">Archivo seleccionado: {formData.cul_file.name}</p>}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex justify-between mt-8">
+            <div className="flex justify-between mt-12">
                 <button
                     type="button"
                     onClick={prevStep}
-                    className="bg-secondary-300 hover:bg-secondary-400 text-gray-800 font-bold py-2 px-4 rounded"
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-lg transition-transform duration-300 transform hover:scale-105"
                 >
                     Anterior
                 </button>
@@ -133,7 +146,8 @@ const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
                     type="button"
                     onClick={nextStep}
                     disabled={!isStepComplete()}
-                    className={`font-bold py-2 px-4 rounded ${isStepComplete() ? 'bg-primary-500 hover:bg-primary-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                    className={`font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 ${isStepComplete() ? 'bg-primary-500 hover:bg-primary-700 text-white' 
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                 >
                     Siguiente
                 </button>

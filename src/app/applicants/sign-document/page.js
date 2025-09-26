@@ -151,7 +151,7 @@ export default function SignDocumentPage() {
         window.history.pushState(null, null, window.location.href);
         
         window.addEventListener('popstate', handlePopState);
-        window.addEventListener('beforeunload', handleBeforeUnload);
+        // window.addEventListener('beforeunload', handleBeforeUnload);
         
         // Método 2: Interceptar el historial cada segundo
         const historyInterval = setInterval(() => {

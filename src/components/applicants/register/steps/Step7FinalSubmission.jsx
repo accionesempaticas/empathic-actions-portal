@@ -37,7 +37,10 @@ const Step7FinalSubmission = ({ nextStep, prevStep, handleChange, formData, hand
                 <p className="mt-2">Puedes seguirnos en nuestras redes:</p>
                 <ul className="list-disc list-inside">
                     <li><strong>Acciones Empáticas:</strong>
-                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="ml-1 underline text-blue-800 font-medium">LinkedIn</a> y
+                        <a href="https://www.tiktok.com/@acciones.empaticas" target="_blank" rel="noopener noreferrer" className="ml-1 underline text-blue-800 font-medium">Tik Tok</a>,
+                        <a href="https://www.linkedin.com/company/acciones-empaticas/posts/?feedView=all" target="_blank" rel="noopener noreferrer" className="ml-1 underline text-blue-800 font-medium">LinkedIn</a>,
+                        <a href="https://www.facebook.com/profile.php?id=61567881191764" target="_blank" rel="noopener noreferrer" className="ml-1 underline text-blue-800 font-medium">Facebook</a> e
+                        <a href="https://www.instagram.com/acciones_empaticas?igsh=Mng1OHZjN2k2NnRq" target="_blank" rel="noopener noreferrer" className="ml-1 underline text-blue-800 font-medium">Instagram</a>
                     </li>
                 </ul>
             </div>

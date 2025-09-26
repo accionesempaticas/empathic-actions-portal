@@ -8,80 +8,15 @@ export default function RegistrationCompletePage() {
     const [hasAccess, setHasAccess] = useState(false);
 
     useEffect(() => {
-        // Verificar si tiene acceso válido a esta página
-        const documentCompleted = sessionStorage.getItem('documentCompleted');
-        const completionTimestamp = sessionStorage.getItem('completionTimestamp');
-        
-        if (!documentCompleted || !completionTimestamp) {
-            // Redirigir si no tiene acceso válido
-            window.location.href = '/applicants/register';
-            return;
-        }
-        
-        // Verificar que no hayan pasado más de 5 minutos
-        const now = Date.now();
-        const timestamp = parseInt(completionTimestamp);
-        const fiveMinutes = 5 * 60 * 1000; // 5 minutos en milisegundos
-        
-        if (now - timestamp > fiveMinutes) {
-            // Limpiar datos y redirigir si ha expirado
-            sessionStorage.removeItem('documentCompleted');
-            sessionStorage.removeItem('completionTimestamp');
-            sessionStorage.removeItem('signedDocumentUrl');
-            window.location.href = '/applicants/register';
-            return;
-        }
-        
         // Obtener URL del documento firmado
         const url = sessionStorage.getItem('signedDocumentUrl');
         setSignedDocumentUrl(url);
         setHasAccess(true);
         
-        // Limpiar la URL después de obtenerla
-        sessionStorage.removeItem('signedDocumentUrl');
-        sessionStorage.removeItem('documentCompleted');
-        sessionStorage.removeItem('completionTimestamp');
-        // Prevenir navegación hacia atrás con múltiples métodos
-        const handlePopState = () => {
-            window.history.pushState(null, null, window.location.href);
-        };
-
-        const handleBeforeUnload = (e) => {
-            e.preventDefault();
-            e.returnValue = '';
-            return '';
-        };
-
-        // Múltiples métodos para prevenir navegación
-        // Método 1: Agregar múltiples entradas al historial
-        window.history.pushState(null, null, window.location.href);
-        window.history.pushState(null, null, window.location.href);
-        window.history.pushState(null, null, window.location.href);
-        
-        window.addEventListener('popstate', handlePopState);
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        
-        // Método 2: Interceptar el historial cada segundo
-        const historyInterval = setInterval(() => {
-            window.history.pushState(null, null, window.location.href);
-        }, 1000);
-        
-        // También prevenir gestos de navegación en móvil
-        const preventSwipe = (e) => {
-            if (e.touches && e.touches.length > 1) {
-                e.preventDefault();
-            }
-        };
-        
-        document.addEventListener('touchstart', preventSwipe, { passive: false });
-
-        // Cleanup al desmontar el componente
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-            document.removeEventListener('touchstart', preventSwipe);
-            clearInterval(historyInterval);
-        };
+        // No limpiar la URL después de obtenerla para que el botón de descarga funcione
+        // sessionStorage.removeItem('signedDocumentUrl');
+        // sessionStorage.removeItem('documentCompleted');
+        // sessionStorage.removeItem('completionTimestamp');
     }, []);
 
     // Mostrar loading mientras verifica acceso
@@ -143,6 +78,16 @@ export default function RegistrationCompletePage() {
                                     Tu carta de compromiso ha sido firmada digitalmente y está disponible 
                                     para futuras referencias en tu perfil.
                                 </p>
+                                {signedDocumentUrl && (
+                                    <a
+                                        href={signedDocumentUrl}
+                                        download={`Carta_Compromiso_Firmada.pdf`}
+                                        className="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+                                    >
+                                        <FaDownload className="inline-block mr-2" />
+                                        Descargar Documento
+                                    </a>
+                                )}
                             </div>
                             
                             <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
