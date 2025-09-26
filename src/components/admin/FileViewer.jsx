@@ -17,7 +17,7 @@ export default function FileViewer({ person, onClose }) {
 
     const viewFile = async (filePath, fileName, fileType) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/documents/download?file_path=${encodeURIComponent(filePath)}`, {
+            const response = await fetch(`empatic-api-production.up.railway.app/api/documents/download?file_path=${encodeURIComponent(filePath)}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 }

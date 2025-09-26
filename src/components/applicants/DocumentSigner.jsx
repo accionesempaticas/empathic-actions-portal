@@ -47,7 +47,7 @@ export default function DocumentSigner({ user }) {
                 province: user.location?.province || user.province || 'Lima'
             });
             
-            const documentEndpoint = `http://127.0.0.1:8000/api/documents/commitment-letter/${user.id}?${params}`;
+            const documentEndpoint = `empatic-api-production.up.railway.app/api/documents/commitment-letter/${user.id}?${params}`;
             
             // Verificar si el endpoint está disponible
             fetch(documentEndpoint, {
@@ -143,12 +143,12 @@ export default function DocumentSigner({ user }) {
             formData.append('user_id', user.id);
             formData.append('document_type', 'commitment_letter');
             
-            console.log('📤 Enviando request a:', 'http://127.0.0.1:8000/api/sign-document');
+            console.log('📤 Enviando request a:', 'empatic-api-production.up.railway.app/api/sign-document');
             console.log('📤 FormData keys:', Array.from(formData.keys()));
             console.log('📤 User ID:', user.id);
             console.log('📤 Token:', localStorage.getItem('access_token') ? 'Presente' : 'Ausente');
 
-            const response = await fetch('http://127.0.0.1:8000/api/sign-document', {
+            const response = await fetch('empatic-api-production.up.railway.app/api/sign-document', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -284,7 +284,7 @@ export default function DocumentSigner({ user }) {
                                     {documentUrl === null && (
                                         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                                             <p className="text-red-700 text-sm">
-                                                Error al cargar el documento. Verifica que el servidor esté funcionando en http://127.0.0.1:8000
+                                                Error al cargar el documento. Verifica que el servidor esté funcionando en ...
                                             </p>
                                         </div>
                                     )}
