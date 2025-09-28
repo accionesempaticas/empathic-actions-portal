@@ -125,12 +125,12 @@ const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
                 />
                 <FileInput 
                     name="cul_file"
-                    label="Certificado Único Laboral"
+                    label="ANTECEDENTES"
                     value={formData.cul_file}
                     onChange={handleChange}
                     accept=".pdf, .jpg, .jpeg, .png"
                     required
-                    helpText="Adjunta tu CUL"
+                    helpText={<>Descarga <a href="https://www.empleosperu.gob.pe/portal-mtpe/#/login" target="_blank" rel="noopener noreferrer" className="underline">aquí</a> si eres peruano, ó firma <a href="https://drive.google.com/file/d/1GZXITGtIZ8Rj1Nz_X5MRvbDOsFRkMjk4/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="underline">declaración</a> si eres extranjero.</>}
                 />
             </div>
 
