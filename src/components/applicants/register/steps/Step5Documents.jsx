@@ -128,7 +128,7 @@ const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
                     label="ANTECEDENTES"
                     value={formData.cul_file}
                     onChange={handleChange}
-                    accept=".pdf, .jpg, .jpeg, .png"
+                    accept=".pdf"
                     required
                     helpText={<>Descarga <a href="https://www.empleosperu.gob.pe/portal-mtpe/#/login" target="_blank" rel="noopener noreferrer" className="underline">aquí</a> si eres peruano, ó firma <a href="https://drive.google.com/file/d/1GZXITGtIZ8Rj1Nz_X5MRvbDOsFRkMjk4/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="underline">declaración</a> si eres extranjero.</>}
                 />
