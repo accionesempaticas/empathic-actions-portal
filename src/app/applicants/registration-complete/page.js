@@ -7,6 +7,29 @@ export default function RegistrationCompletePage() {
     const [signedDocumentUrl, setSignedDocumentUrl] = useState(null);
     const [hasAccess, setHasAccess] = useState(false);
 
+    const handleDownload = async () => {
+        if (!signedDocumentUrl) return;
+
+        try {
+            const response = await fetch(signedDocumentUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Carta_Compromiso_Firmada.pdf';
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error al descargar:', error);
+            // Fallback: abrir en nueva pestaña
+            window.open(signedDocumentUrl, '_blank');
+        }
+    };
+
     useEffect(() => {
         // Obtener URL del documento firmado
         const url = sessionStorage.getItem('signedDocumentUrl');
@@ -79,14 +102,13 @@ export default function RegistrationCompletePage() {
                                     para futuras referencias en tu perfil.
                                 </p>
                                 {signedDocumentUrl && (
-                                    <a
-                                        href={signedDocumentUrl}
-                                        download={`Carta_Compromiso_Firmada.pdf`}
-                                        className="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+                                    <button
+                                        onClick={handleDownload}
+                                        className="mt-4 inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
                                     >
-                                        <FaDownload className="inline-block mr-2" />
+                                        <FaDownload className="mr-2" />
                                         Descargar Documento
-                                    </a>
+                                    </button>
                                 )}
                             </div>
                             
