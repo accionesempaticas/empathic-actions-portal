@@ -9,7 +9,7 @@ export default function FileViewer({ person, onClose }) {
     const files = [
         { name: 'CV', path: person.cv_path, type: 'document' },
         { name: 'DNI Escaneado', path: person.dni_scan_path, type: 'document' },
-        { name: 'Antecedentes', path: person.lab_cert_path, type: 'document' },
+        { name: 'Antecedentes', path: person.lab_cert_path, type: 'document' }, // Updated text
         { name: 'Carta de Compromiso Firmada', path: person.commitment_letter_path, type: 'document' },
         { name: 'Foto Informal', path: person.photo_informal_path, type: 'image' },
         { name: 'Foto Formal', path: person.photo_formal_path, type: 'image' }
