@@ -21,7 +21,22 @@ export const translations = {
     'phone_number': 'número de teléfono',
     'gender': 'género',
     'group': 'grupo',
-    'area': 'área'
+    'area': 'área',
+    'document_type': 'tipo de documento',
+    'nationality': 'nacionalidad',
+    'date_of_birth': 'fecha de nacimiento',
+    'linkedin': 'perfil de LinkedIn',
+    'family_phone_number': 'teléfono familiar',
+    'formation.academic_degree': 'grado académico',
+    'formation.career': 'carrera',
+    'formation.formation_center': 'centro de formación',
+    'location.country': 'país',
+    'location.region': 'región',
+    'location.province': 'provincia',
+    'location.district': 'distrito',
+    'location.address': 'dirección',
+    'experience.experience_time': 'años de experiencia',
+    'experience.other_volunteer_work': 'participación en otros voluntariados'
 };
 
 export const translateMessage = (message) => {
@@ -43,13 +58,17 @@ export const translateMessage = (message) => {
     return translatedMessage;
 };
 
+export const translateFieldName = (fieldName) => {
+    return translations[fieldName] || fieldName.replace('_', ' ').replace('.', ' - ');
+};
+
 export const translateValidationErrors = (errors) => {
     if (!errors || typeof errors !== 'object') return errors;
 
     const translatedErrors = {};
 
     Object.keys(errors).forEach(field => {
-        const translatedField = translations[field] || field;
+        const translatedField = translateFieldName(field);
         const messages = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
 
         translatedErrors[translatedField] = messages.map(message => translateMessage(message));

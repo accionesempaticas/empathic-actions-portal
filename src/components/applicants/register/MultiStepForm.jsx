@@ -12,6 +12,7 @@ import {
     FaIdCard
 } from "react-icons/fa";
 import {useUsers} from "@/contexts/UsersContext";
+import { translateFieldName } from "@/utils/translations";
 import Step1Welcome from "@/components/applicants/register/steps/Step1Welcome";
 import Step2PersonalData from "@/components/applicants/register/steps/Step2PersonalData";
 import Step3LocationAndEducation from "@/components/applicants/register/steps/Step3LocationAndEducation";
@@ -28,6 +29,8 @@ const MultiStepForm = () => {
     const [formData, setFormData] = useState({});
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
+    const [validationErrors, setValidationErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
 
     const totalSteps = 7; // Define el número total de pasos aquí
 
@@ -130,7 +133,15 @@ const MultiStepForm = () => {
             // Verificar si es un error de límite de IP
             if (err.response && err.response.status === 429 && err.response.data.error === 'IP_REGISTRATION_LIMIT_EXCEEDED') {
                 alert('⚠️ Límite de Registros Alcanzado\n\n' + err.response.data.message);
+            } else if (err.response && err.response.status === 422 && err.response.data.errors) {
+                // Errores de validación
+                setValidationErrors(err.response.data.errors);
+                setGeneralError('Por favor corrige los errores en el formulario.');
+                setShowErrorModal(true);
             } else {
+                // Error genérico
+                setGeneralError(err.response?.data?.message || 'Ocurrió un error al procesar el formulario. Inténtalo de nuevo.');
+                setValidationErrors({});
                 setShowErrorModal(true);
             }
             console.error("Submission error:", err);
@@ -220,7 +231,7 @@ const MultiStepForm = () => {
             {/* Modal de Error */}
             {showErrorModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-auto overflow-hidden border border-red-200">
+                    <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full mx-auto overflow-hidden border border-red-200">
                         <div className="bg-red-500 p-6">
                             <div className="flex justify-center">
                                 <div className="bg-white p-3 rounded-full">
@@ -231,15 +242,42 @@ const MultiStepForm = () => {
                                 Error en el Registro
                             </h2>
                         </div>
-                        <div className="p-6 text-center">
-                            <p className="text-gray-600 mb-6">
-                                Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.
-                            </p>
+                        <div className="p-6">
+                            {generalError && (
+                                <p className="text-gray-600 mb-4 text-center">
+                                    {generalError}
+                                </p>
+                            )}
+
+                            {Object.keys(validationErrors).length > 0 && (
+                                <div className="mb-6">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Errores encontrados:</h3>
+                                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                                        {Object.entries(validationErrors).map(([field, messages]) => (
+                                            <div key={field} className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                                <h4 className="font-medium text-red-800 capitalize mb-1">
+                                                    {translateFieldName(field)}:
+                                                </h4>
+                                                <ul className="text-sm text-red-700">
+                                                    {Array.isArray(messages) ? messages.map((msg, idx) => (
+                                                        <li key={idx}>• {msg}</li>
+                                                    )) : <li>• {messages}</li>}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <button
-                                onClick={() => setShowErrorModal(false)}
+                                onClick={() => {
+                                    setShowErrorModal(false);
+                                    setValidationErrors({});
+                                    setGeneralError('');
+                                }}
                                 className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
                             >
-                                Intentar de Nuevo
+                                Cerrar y Corregir
                             </button>
                         </div>
                     </div>
