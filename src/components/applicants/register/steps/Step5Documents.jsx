@@ -86,51 +86,51 @@ const Step5Documents = ({ nextStep, prevStep, handleChange, formData }) => {
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Carga de Documentos</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <FileInput 
+                <FileInput
                     name="cv_file"
                     label="Currículum Vitae (PDF)"
                     value={formData.cv_file}
                     onChange={handleChange}
                     accept=".pdf,.doc,.docx"
                     required
-                    helpText="Adjunta tu CV actualizado"
+                    helpText="Adjunta tu CV actualizado (PDF, DOC, DOCX)"
                 />
-                <FileInput 
+                <FileInput
                     name="pi_file"
                     label="Foto Informal"
                     value={formData.pi_file}
                     onChange={handleChange}
                     accept=".jpg, .jpeg, .png"
                     required
-                    helpText="Sube una foto tuya"
+                    helpText="Sube una foto tuya (JPG, JPEG, PNG)"
                 />
-                <FileInput 
+                <FileInput
                     name="pf_file"
                     label="Foto Formal"
                     value={formData.pf_file}
                     onChange={handleChange}
                     accept=".jpg, .jpeg, .png"
                     required
-                    helpText="Sube una foto formal"
+                    helpText="Sube una foto formal (JPG, JPEG, PNG)"
                     referenceLink="https://www.canva.com/design/DAGg1L_x5HE/HGCnz8dCfluk3NtcF7cRcQ/edit"
                 />
-                <FileInput 
+                <FileInput
                     name="dni_file"
                     label="Documento de Identidad"
                     value={formData.dni_file}
                     onChange={handleChange}
                     accept=".pdf, .jpg, .jpeg, .png"
                     required
-                    helpText="Adjunta tu DNI/CE"
+                    helpText="Adjunta tu DNI/CE (PDF, JPG, JPEG, PNG)"
                 />
-                <FileInput 
+                <FileInput
                     name="cul_file"
                     label="ANTECEDENTES"
                     value={formData.cul_file}
                     onChange={handleChange}
                     accept=".pdf"
                     required
-                    helpText={<>Descarga <a href="https://www.empleosperu.gob.pe/portal-mtpe/#/login" target="_blank" rel="noopener noreferrer" className="underline">aquí</a> si eres peruano, ó firma <a href="https://drive.google.com/file/d/1GZXITGtIZ8Rj1Nz_X5MRvbDOsFRkMjk4/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="underline">declaración</a> si eres extranjero.</>}
+                    helpText={<>Descarga <a href="https://www.empleosperu.gob.pe/portal-mtpe/#/login" target="_blank" rel="noopener noreferrer" className="underline">aquí</a> si eres peruano, ó firma <a href="https://drive.google.com/file/d/1GZXITGtIZ8Rj1Nz_X5MRvbDOsFRkMjk4/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="underline">declaración</a> si eres extranjero (PDF).</>}
                 />
             </div>
 

@@ -8,11 +8,32 @@ const Step2PersonalData = ({ nextStep, prevStep, handleChange, formData }) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
+    const validateDocumentNumber = (documentType, documentNumber) => {
+        if (!documentType || !documentNumber) return { isValid: true, message: '' };
+
+        const number = documentNumber.toString().trim();
+
+        if (documentType === 'DNI') {
+            if (!/^\d{8}$/.test(number)) {
+                return { isValid: false, message: 'El DNI debe tener exactamente 8 dígitos.' };
+            }
+        } else if (documentType === 'CC' || documentType === 'CE') {
+            if (!/^\d{5,20}$/.test(number)) {
+                return { isValid: false, message: 'La Cédula debe tener entre 5 y 20 dígitos.' };
+            }
+        }
+
+        return { isValid: true, message: '' };
+    };
+
     const isStepComplete = () => {
         const requiredFields = ['document_type', 'document_number', 'first_name', 'last_name', 'nationality', 'date_of_birth', 'phone_number', 'email', 'gender'];
         const isComplete = requiredFields.every(field => formData[field] && String(formData[field]).trim() !== '');
-        return isComplete && validateEmail(formData.email);
+        const documentValidation = validateDocumentNumber(formData.document_type, formData.document_number);
+        return isComplete && validateEmail(formData.email) && documentValidation.isValid;
     };
+
+    const documentValidation = validateDocumentNumber(formData.document_type, formData.document_number);
 
     return (
         <div className="p-8">
@@ -31,7 +52,8 @@ const Step2PersonalData = ({ nextStep, prevStep, handleChange, formData }) => {
                     >
                         <option value="">Seleccione una opción</option>
                         <option value="DNI">DNI</option>
-                        <option value="CE">Carné de Extranjería</option>
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="CE">Cédula de Extranjería</option>
                     </select>
                 </div>
 
@@ -44,9 +66,10 @@ const Step2PersonalData = ({ nextStep, prevStep, handleChange, formData }) => {
                         id="document_number"
                         onChange={handleChange}
                         value={formData.document_number || ''}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm py-3 px-4"
+                        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm py-3 px-4 ${!documentValidation.isValid ? 'border-red-500' : ''}`}
                         required
                     />
+                    {!documentValidation.isValid && <p className="mt-2 text-sm text-red-600">{documentValidation.message}</p>}
                 </div>
 
                 {/* First Name */}

@@ -35,7 +35,15 @@ export default function LoginPage() {
                 router.push('/applicants/complete-profile');
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Error de inicio de sesión. Verifica tus credenciales.');
+            const errorMessage = err.response?.data?.message || 'Error de inicio de sesión. Verifica tus credenciales.';
+            setError(errorMessage);
+
+            // Limpiar campos y error después de 5 segundos
+            setTimeout(() => {
+                setError('');
+                setEmail('');
+                setPassword('');
+            }, 5000);
         }
     };
 

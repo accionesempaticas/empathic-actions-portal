@@ -3,9 +3,16 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStats } from '@/contexts/StatsContext';
 import UserManagement from '@/components/admin/UserManagement';
 
 export default function DashboardPage() {
+  const { stats, loading, fetchStats } = useStats();
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
       <div className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 p-6">
         <div className="max-w-7xl mx-auto">
@@ -33,8 +40,8 @@ export default function DashboardPage() {
                       </svg>
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Total Personas</p>
-                      <p className="text-3xl font-extrabold text-primary-700">1,234</p>
+                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Total Voluntarios</p>
+                      <p className="text-3xl font-extrabold text-primary-700">{loading ? '...' : stats.totalVolunteers}</p>
                     </div>
                   </div>
                 </div>
@@ -47,8 +54,8 @@ export default function DashboardPage() {
                       </svg>
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Proyectos Activos</p>
-                      <p className="text-3xl font-extrabold text-secondary-700">56</p>
+                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Voluntarios Activos</p>
+                      <p className="text-3xl font-extrabold text-secondary-700">{loading ? '...' : stats.activeVolunteers}</p>
                     </div>
                   </div>
                 </div>
@@ -61,8 +68,8 @@ export default function DashboardPage() {
                       </svg>
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Voluntarios</p>
-                      <p className="text-3xl font-extrabold text-success-700">892</p>
+                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Voluntarios Inactivos</p>
+                      <p className="text-3xl font-extrabold text-success-700">{loading ? '...' : stats.inactiveVolunteers}</p>
                     </div>
                   </div>
                 </div>
@@ -75,8 +82,8 @@ export default function DashboardPage() {
                       </svg>
                     </div>
                     <div className="ml-4">
-                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Horas Donadas</p>
-                      <p className="text-3xl font-extrabold text-info-700">12,456</p>
+                      <p className="text-sm font-bold text-neutral-600 uppercase tracking-wider">Voluntarios Pendientes</p>
+                      <p className="text-3xl font-extrabold text-info-700">{loading ? '...' : stats.pendingVolunteers}</p>
                     </div>
                   </div>
                 </div>

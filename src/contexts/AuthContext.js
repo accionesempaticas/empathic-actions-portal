@@ -55,6 +55,8 @@ export function AuthProvider({ children }) {
             localStorage.removeItem('user');
             delete api.defaults.headers.common['Authorization'];
             setUser(null);
+            // Redirigir a login después de logout exitoso
+            window.location.href = '/login';
         }
     };
 

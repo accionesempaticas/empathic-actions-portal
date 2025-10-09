@@ -2,6 +2,7 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import api from '@/api/api';
+import { translateMessage, translateValidationErrors } from '@/utils/translations';
 
 const UsersContext = createContext(null);
 
@@ -69,6 +70,13 @@ export function UsersProvider({ children }) {
             ); // Update state
             return response.data;
         } catch (err) {
+            // Traducir mensajes de error
+            if (err.response?.data?.errors) {
+                err.response.data.errors = translateValidationErrors(err.response.data.errors);
+            }
+            if (err.response?.data?.message) {
+                err.response.data.message = translateMessage(err.response.data.message);
+            }
             setError(err);
             console.error(`Failed to update user with ID ${id}:`, err);
             throw err;
@@ -104,6 +112,13 @@ export function UsersProvider({ children }) {
             });
             return response.data;
         } catch (err) {
+            // Traducir mensajes de error
+            if (err.response?.data?.errors) {
+                err.response.data.errors = translateValidationErrors(err.response.data.errors);
+            }
+            if (err.response?.data?.message) {
+                err.response.data.message = translateMessage(err.response.data.message);
+            }
             setError(err);
             console.error("Failed to register postulant:", err);
             throw err;

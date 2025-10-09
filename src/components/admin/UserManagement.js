@@ -747,15 +747,19 @@ export default function UserManagement() {
                                     <label htmlFor="experience_years" className="block text-sm font-semibold text-primary-700 mb-2">
                                         Años de Experiencia:
                                     </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="experience_years"
                                         id="experience_years"
                                         value={formData.experience_years}
                                         onChange={handleChange}
                                         className="w-full border-2 border-primary-200 rounded-xl shadow-sm p-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-300 bg-gray-50 focus:bg-white"
-                                        placeholder="Ej: 1-2 años"
-                                    />
+                                    >
+                                        <option value="">Seleccione años de experiencia</option>
+                                        <option value="0-1 años">0-1 años</option>
+                                        <option value="2-3 años">2-3 años</option>
+                                        <option value="4-5 años">4-5 años</option>
+                                        <option value="Más de 5 años">Más de 5 años</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label htmlFor="other_volunteering" className="block text-sm font-semibold text-primary-700 mb-2">
